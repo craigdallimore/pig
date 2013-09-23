@@ -8,7 +8,7 @@ html
 
     script(src='js/mocha.js')
     script(src='js/chai.js')
-    //script(src='js/sinon-chai.js')
+    script(src='js/sinon-chai.js')
     script(src='js/sinon-1.7.3.js')
 
     script.
@@ -19,18 +19,22 @@ html
     script(src='../../static/js/libs/underscore-min.js')
     script(src='../../static/js/libs/backbone-min.js')
     script(src='../../static/js/libs/backbone.marionette.min.js')
-    script(src='../../static/dist/app.min.js')
 
-    block testscript
 
   body
 
     div#mocha
+    div#fixture
+
+    script(src='../../static/dist/app.min.js')
+    block testscript
 
     script.
-      mocha
-        .globals(['App']) // acceptable globals
-        .run()
+      if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+        mocha
+          .globals(['App']) // acceptable globals
+          .run()
+      }
 
 // KAIZEN
 

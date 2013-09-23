@@ -54,6 +54,7 @@ module.exports = (grunt) ->
           '<%= dirs.css %>base/common.css'
           '<%= dirs.css %>base/typography.css'
           '<%= dirs.css %>layout/main.css'
+          '<%= dirs.css %>modules/upload.css'
         ]
         dest: '<%= dirs.dist %>app.concat.css'
 
@@ -82,7 +83,6 @@ module.exports = (grunt) ->
         options:
           pretty: true
         files:
-          'index.html': '<%= dirs.jade %>index.jade'
           '<%= dirs.unittest %>test1.html': '<%= dirs.jade %>test1.jade'
 
     # Application
@@ -98,6 +98,7 @@ module.exports = (grunt) ->
             '<%= dirs.js %>mixin.js'
             '<%= dirs.app %>App.js'
             '<%= dirs.app %>App.Tmpl.js'
+            '<%= dirs.app %>Views/Uploader.js'
             '<%= dirs.app %>Main.js'
           ]
 
@@ -115,9 +116,6 @@ module.exports = (grunt) ->
       sass:
         files: '<%= dirs.scss %>**/*.scss'
         tasks: 'sass'
-      jade:
-        files: '<%= dirs.jade %>*.jade'
-        tasks: 'jade'
       templates:
         files: '<%= dirs.base %>templates/*.html'
         tasks: 'tmpl'

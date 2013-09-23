@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="css/mocha.css">
     <script src="js/mocha.js"></script>
     <script src="js/chai.js"></script>
-    <!--script(src='js/sinon-chai.js')-->
+    <script src="js/sinon-chai.js"></script>
     <script src="js/sinon-1.7.3.js"></script>
     <script>
       mocha.setup('bdd')
@@ -17,16 +17,19 @@
     <script src="../../static/js/libs/underscore-min.js"></script>
     <script src="../../static/js/libs/backbone-min.js"></script>
     <script src="../../static/js/libs/backbone.marionette.min.js"></script>
-    <script src="../../static/dist/app.min.js"></script>
-    <script src="js/test1.js"></script>
   </head>
   <body>
     <div id="mocha"></div>
+    <div id="fixture"></div>
+    <script src="../../static/dist/app.min.js"></script>
+    <script src="js/test1.js"></script>
     <script>
-      mocha
-        .globals(['App']) // acceptable globals
-        .run()
-        
+      if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+        mocha
+          .globals(['App']) // acceptable globals
+          .run()
+      }
+      
     </script>
   </body>
 </html>

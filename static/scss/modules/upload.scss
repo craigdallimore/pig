@@ -1,0 +1,23 @@
+@import "_mixins";
+
+fieldset {
+  padding: 30px;
+}
+
+#upload {
+  background: #eee;
+
+}
+
+#file-select {}
+
+#file-drag {
+  display: none;
+  background: cyan;
+  padding: 20px;
+  &:hover {
+    background: darken(cyan, 10%);
+  }
+}
+
+#btn-submit {}

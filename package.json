@@ -5,6 +5,7 @@
   "private": true,
   "devDependencies": {
     "express": "3.x",
+    "jade": "*",
     "grunt": "0.4.1",
     "grunt-contrib-compass": "0.1.2",
     "grunt-contrib-concat": "0.1.2",

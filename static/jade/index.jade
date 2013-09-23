@@ -1,4 +1,28 @@
 extends layout
 
+block title
+
+  title Pig@#{ title }
+
 block content
-    p Kaizen!
+
+    h1 Pig
+
+    form#upload(action="upload", method="post", enctype="multipart/data")
+
+      fieldset
+
+        input#max-file-size(type="hidden" name="max-file-size" value="100000")
+
+        label(for="file-select") Files to upload:
+
+        input#file-select(type="file" name="file-select[]" multiple="multiple")
+
+        #file-drag
+          p Drop files here
+
+      fieldset
+        button#btn-submit(type="submit") Upload
+
+    messages
+      p All is well.
