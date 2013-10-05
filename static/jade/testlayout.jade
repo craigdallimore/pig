@@ -11,6 +11,13 @@ html
     script(src='js/sinon-chai.js')
     script(src='js/sinon-1.7.3.js')
 
+
+
+  body
+
+    div#mocha
+    div#fixture
+
     script.
       mocha.setup('bdd')
 
@@ -19,14 +26,8 @@ html
     script(src='../../static/js/libs/underscore-min.js')
     script(src='../../static/js/libs/backbone-min.js')
     script(src='../../static/js/libs/backbone.marionette.min.js')
-
-
-  body
-
-    div#mocha
-    div#fixture
-
     script(src='../../static/dist/app.min.js')
+
     block testscript
 
     script.

@@ -15,7 +15,7 @@ fieldset {
   display: none;
   background: cyan;
   padding: 20px;
-  &:hover {
+  &:hover, &.hover{
     background: darken(cyan, 10%);
   }
 }

@@ -122,7 +122,8 @@ module.exports = (grunt) ->
 
 
   grunt.registerTask 'dev',      ['uglify', 'css', 'jade']
-  grunt.registerTask 'js',       ['uglify', 'mocha']
+  #grunt.registerTask 'js',       ['uglify', 'mocha']
+  grunt.registerTask 'js',       ['uglify']
   grunt.registerTask 'unittest', ['coffee', 'mocha']
   grunt.registerTask 'css',      ['concat:css', 'cssmin']
   grunt.registerTask 'sass',     ['compass', 'css']

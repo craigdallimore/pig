@@ -26,44 +26,71 @@
   });
 
   describe('App.View.Uploader', function() {
-    var $fixture, uploader;
+    var $fixture, mockFileEvent, uploader;
     uploader = null;
+    mockFileEvent = {
+      originalEvent: {
+        target: {
+          files: ['a', 'b', 'c']
+        }
+      }
+    };
     $fixture = $('#fixture');
-    console.log($fixture);
-    before(function() {
-      return $fixture.append('<div id="upload"><button id="btn-submit"></button></div>');
-    });
-    after(function() {
-      return $fixture.empty();
-    });
     beforeEach(function() {
+      $fixture.append('<div id="upload">' + '<input id="file-select" type="file"/>' + '<div id="file-drag"></div>' + '<button id="btn-submit"></button>' + '</div>');
       uploader = new App.View.Uploader({
         el: $fixture
       });
+      sinon.spy(uploader, 'fileSelectHandler');
       return sinon.spy(uploader, 'toggleDroppable');
     });
     afterEach(function() {
+      uploader.fileSelectHandler.restore();
       uploader.toggleDroppable.restore();
-      return uploader.remove();
+      uploader.remove();
+      return $fixture.empty();
     });
     it('should be able to be instantiated as a view', function() {
       return uploader.should.be.an('object');
     });
-    describe('ToggleDroppable method', function() {});
-    it('should not be called if the FileAPI does not exist', function() {
-      window.File = false;
-      uploader.initialize();
-      return uploader.toggleDroppable.should.not.have.been.called;
+    it('calls FileSelectHandler when a file is dropped', function() {
+      $fixture.find('#file-drag').trigger('drop', [mockFileEvent]);
+      return uploader.fileSelectHandler.should.have.been.calledOnce;
     });
-    it('should be called if the FileAPI exists', function() {
-      window.File = true;
-      window.FileList = true;
-      window.FileReader = true;
-      uploader.initialize();
-      return uploader.toggleDroppable.should.have.been.called;
+    describe('ToggleDroppable method', function() {
+      it('should not be called if the FileAPI does not exist', function() {
+        window.File = false;
+        uploader.initialize();
+        return uploader.toggleDroppable.should.not.have.been.called;
+      });
+      it('should be called if the FileAPI exists', function() {
+        window.File = true;
+        window.FileList = true;
+        window.FileReader = true;
+        uploader.initialize();
+        return uploader.toggleDroppable.should.have.been.calledOnce;
+      });
+      it('hides the submit button', function() {
+        return $fixture.find('#btn-submit').css('display').should.equal('none');
+      });
+      return it('shows the draggable element if this FileAPI exists', function() {
+        window.File = true;
+        window.FileList = true;
+        window.FileReader = true;
+        uploader.initialize();
+        return $fixture.find('#file-drag').css('display').should.equal('block');
+      });
     });
-    return it('hides the submit button', function() {
-      return $fixture.find('#btn-submit').css('display').should.equal('none');
+    return describe('file-drag element', function() {
+      it('changes class on mouseover', function() {
+        $fixture.find('#file-drag').trigger('dragover');
+        return $fixture.find('#file-drag').hasClass('hover').should.be["true"];
+      });
+      return it('changes class on mouseout', function() {
+        $fixture.find('#file-drag').addClass('hover');
+        $fixture.find('#file-drag').trigger('dragout');
+        return $fixture.find('#file-drag').hasClass('hover').should.be["false"];
+      });
     });
   });
 
