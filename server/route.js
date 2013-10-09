@@ -35,14 +35,28 @@ function saveFile (fileName, file) {
 
 
   fs.readFile(file.path, function(err, data) {
+    console.log('readfile');
     if (err) throw err;
 
-    var newPath = __dirname + '/../uploads/' + contentType + '/' + fileName;
+    var newPath = '/home/pi/ext/' + contentType + '/' + fileName;
 
     console.log('oldPath', file.path);
     console.log('newPath', newPath);
+    fs.stat(file.path, function(err, stats) {
+      console.log('old path stats', stats);
+      var permString = '0' + (stats.mode & 0777).toString(8);
+      console.log('permstring', permString);
+    });
+
+
+    //fs.stat('/home/pi/ext' + contentType, function(err, stats) {
+      //console.log('new path stats', stats);
+      //var permString = '0' + (stats.mode & 0777).toString(8);
+      //console.log('permstring', permString);
+    //});
 
     fs.rename(file.path, newPath, function(err) {
+      console.log('rename');
       if (err) throw err;
     });
 
