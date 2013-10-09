@@ -1,7 +1,26 @@
 @import "_mixins";
 
-fieldset {
+.uploader {
+
+
+}
+
+.drop-zone {
+  background: pink;
+  color: #eee;
+  display: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
   padding: 30px;
+  &:hover, &.hover{
+    cursor: pointer;
+    text-shadow: 0 1px 1px darken(pink, 25%);
+    background: darken(pink, 10%);
+  }
+}
+
+fieldset {
 }
 
 #upload {
@@ -12,12 +31,6 @@ fieldset {
 #file-select {}
 
 #file-drag {
-  display: none;
-  background: cyan;
-  padding: 20px;
-  &:hover, &.hover{
-    background: darken(cyan, 10%);
-  }
 }
 
 #btn-submit {}

@@ -6,7 +6,7 @@ block title
 
 block content
 
-    form#upload(action="upload", method="post", enctype="multipart/data")
+    form#upload(action="upload", method="post", enctype="multipart/data").uploader
 
       fieldset
 
@@ -16,10 +16,29 @@ block content
 
         input#file-select(type="file" name="file-select[]" multiple="multiple")
 
-        #file-drag
+        #file-drag.drop-zone
           p Drop files here
 
       fieldset
         button#btn-submit(type="submit") Upload
 
       img.ajax.hide(src='/static/img/ajax.gif', width='16', height='16', alt='Waiting...')
+
+    section#image-list.media-list
+      h2 Images
+      button refresh
+      img.ajax.hide(src='/static/img/ajax.gif', width='16', height='16', alt='Waiting...')
+      ul
+
+    section#video-list.media-list
+      h2 Videos
+      button refresh
+      img.ajax.hide(src='/static/img/ajax.gif', width='16', height='16', alt='Waiting...')
+      ul
+
+    section#audio-list.media-list
+      h2 Audio
+      button refresh
+      img.ajax.hide(src='/static/img/ajax.gif', width='16', height='16', alt='Waiting...')
+      ul
+

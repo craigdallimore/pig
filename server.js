@@ -22,8 +22,9 @@ App.configure(function() {
 });
 
 // Routes
-App.get('/',         routes.index);
-App.post('/uploads', routes.onUploadStart, routes.onUploadComplete);
+App.get('/',               routes.index);
+App.post('/uploads',       routes.onUploadStart, routes.onUploadComplete);
+App.get('/api/item/:type', routes.api.getPath);
 
 // Start server
 if (!module.parent) {
