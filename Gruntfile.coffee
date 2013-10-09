@@ -55,6 +55,7 @@ module.exports = (grunt) ->
           '<%= dirs.css %>base/typography.css'
           '<%= dirs.css %>layout/main.css'
           '<%= dirs.css %>modules/upload.css'
+          '<%= dirs.css %>modules/media-list.css'
         ]
         dest: '<%= dirs.dist %>app.concat.css'
 
@@ -98,10 +99,15 @@ module.exports = (grunt) ->
             '<%= dirs.js %>mixin.js'
             '<%= dirs.app %>App.js'
             '<%= dirs.app %>App.Tmpl.js'
+            '<%= dirs.app %>Models/FileItem.js'
             '<%= dirs.app %>Views/Uploader.js'
+            '<%= dirs.app %>Views/MediaListView.js'
+            '<%= dirs.app %>Views/FileItem.js'
+            '<%= dirs.app %>Collection/Image.js'
+            '<%= dirs.app %>Collection/Audio.js'
+            '<%= dirs.app %>Collection/Video.js'
             '<%= dirs.app %>Main.js'
           ]
-
 
     watch:
       javascript:

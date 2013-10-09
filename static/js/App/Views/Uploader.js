@@ -18,7 +18,7 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
     },
 
     toggleDroppable: function() {
-      this.$el.find('#btn-submit').hide();
+      this.$el.find('#btn-submit, #file-select, label[for="file-select"]').hide();
       this.$el.find('#file-drag').show();
     },
 
@@ -37,19 +37,17 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
     },
 
     onAsynchStart: function() {
-      console.log('asynch start');
       this.$el.find('.ajax').fadeIn();
     },
 
     onAsynchDone: function() {
-      console.log('asynch end');
       this.$el.find('.ajax').stop().fadeOut();
     },
 
     fileSelectHandler: function(e) {
 
-      var event = e.originalEvent ? e.originalEvent : e,
-        files   = event.target.files || event.dataTransfer.files,
+      var event  = e.originalEvent ? e.originalEvent : e,
+        files    = event.target.files || event.dataTransfer.files,
         formData = new FormData();
 
       event.preventDefault();
@@ -58,7 +56,6 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
 
 
       _.each(files, function(file) {
-        console.log('file', file);
         formData.append(file.name, file);
       });
 
@@ -76,7 +73,6 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
       var xhr = e.target;
 
       if (xhr.readyState === 4) {
-        console.log('all done');
         this.onAsynchDone();
       }
 

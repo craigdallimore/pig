@@ -22,6 +22,30 @@ module.exports = function(App) {
 
     onUploadComplete: function(req, res) {
       res.send({ received: true });
+    },
+
+    api: {
+      getPath: function(req, res) {
+
+        var itemType = req.params.type;
+        console.log('itemType', itemType);
+        var path = '/../uploads/' + itemType + '/';
+
+        fs.readdir( __dirname + path, function(err, data) {
+          if (err) throw err;
+
+          var json = data.map(function(item) {
+
+            return {
+              name: item,
+              path: path + item
+            };
+
+          }) || [];
+
+          res.send(json);
+        });
+      }
     }
 
   };
