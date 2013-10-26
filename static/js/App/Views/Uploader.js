@@ -64,9 +64,24 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
       xhr.open('POST', '/uploads');
       xhr.send(formData);
       xhr.onreadystatechange = _.bind(this.onReadyStateChange, this);
+      xhr.onerror            = _.bind(this.onError, this);
+      xhr.onprogress         = _.bind(this.onProgress, this);
 
       console.log(xhr);
       this.onAsynchStart();
+    },
+
+    onError: function(msg) {
+      this.$el.find('.ajax').stop().fadeOut();
+      console.log('error', msg);
+    },
+
+    onProgress: function(e) {
+      console.log(e);
+      if (e.lengthComputable) {
+        var percentage = (e.loaded / e.total) * 100;
+        console.log(percentage);
+      }
     },
 
     onReadyStateChange: function(e) {

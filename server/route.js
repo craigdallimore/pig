@@ -29,16 +29,16 @@ module.exports = function(App) {
 
         var itemType = req.params.type;
         console.log('itemType', itemType);
-        var path = '/../uploads/' + itemType + '/';
+        var path = '/home/pi/ext/' + itemType + '/';
 
-        fs.readdir( __dirname + path, function(err, data) {
+        fs.readdir( path, function(err, data) {
           if (err) throw err;
 
           var json = data.map(function(item) {
 
             return {
               name: item,
-              path: path + item
+              path: '/files/' + itemType + '/' + item
             };
 
           }) || [];
@@ -55,35 +55,19 @@ module.exports = function(App) {
 function saveFile (fileName, file) {
 
   var contentType = file.headers['content-type'].split('/')[0];
+  var destPath = '/home/pi/ext/' + contentType + '/' + fileName;
+
   console.log('contentType', contentType);
+  console.log('temp path', file.path);
+  console.log('dest path', destPath);
 
+  var is = fs.createReadStream(file.path);
+  var os = fs.createWriteStream(destPath);
 
-  fs.readFile(file.path, function(err, data) {
-    console.log('readfile');
-    if (err) throw err;
-
-    var newPath = '/home/pi/ext/' + contentType + '/' + fileName;
-
-    console.log('oldPath', file.path);
-    console.log('newPath', newPath);
-    fs.stat(file.path, function(err, stats) {
-      console.log('old path stats', stats);
-      var permString = '0' + (stats.mode & 0777).toString(8);
-      console.log('permstring', permString);
-    });
-
-
-    //fs.stat('/home/pi/ext' + contentType, function(err, stats) {
-      //console.log('new path stats', stats);
-      //var permString = '0' + (stats.mode & 0777).toString(8);
-      //console.log('permstring', permString);
-    //});
-
-    fs.rename(file.path, newPath, function(err) {
-      console.log('rename');
-      if (err) throw err;
-    });
-
+  is.pipe(os);
+  is.on('end', function() {
+    console.log('on end');
+    fs.unlinkSync(file.path);
   });
 
 }

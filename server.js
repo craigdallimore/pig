@@ -16,8 +16,10 @@ App.use(express.logger('dev'));
 App.configure(function() {
   App.use(express.bodyParser({
     keepExtensions: true,
+    limit: 4100000000,
     uploadDir: __dirname + '/uploads' }));
   App.use('./static', express.static(__dirname + './static'));
+  App.use('/files', express.static('/home/pi/ext'));
   App.use(express.static(__dirname));
 });
 

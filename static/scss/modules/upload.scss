@@ -1,5 +1,13 @@
 @import "_mixins";
 
+.ajax {
+  margin: 0 auto;
+  display: block;
+  &.hide {
+    display: none;
+  }
+}
+
 .uploader {
 
 
