@@ -5,7 +5,7 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
     itemViewContainer: 'ul',
 
     events: {
-      'click button': 'onButtonClick'
+      'click .btn-refresh': 'onButtonClick'
     },
 
     onButtonClick: function() {

@@ -14,7 +14,8 @@ App.on('start', function() {
   var videoCollectionView = new App.View.MediaListView({
     el:         '#video-list',
     collection: videoCollection,
-    itemView:   App.View.VideoFileItem
+    itemView:   App.View.VideoFileItem,
+    model:      App.Model.VideoFileItem
   });
 
 
