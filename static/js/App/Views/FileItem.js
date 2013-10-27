@@ -20,8 +20,7 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
 
     onRemoveClick: function(e) {
       e.preventDefault();
-      console.log('remove', this.model);
-      this.model.trigger('remove');
+      this.model.collection.remove(this.model);
     },
 
     template: function(serialized_model) {

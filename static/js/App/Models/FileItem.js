@@ -3,19 +3,28 @@ App.module('Model', function(Model, App, Backbone, Marionette, $, _) {
   Model.VideoFileItem = Backbone.Model.extend({
 
     initialize: function() {
-      console.log('init model', this);
-      _.extend(this, Backbone.Events);
 
+      _.extend(this, Backbone.Events);
       this.on('remove', this.onRemove, this);
 H
     },
 
     url: function() {
-      return '/api/item/video';
+      return '/api/item/video/' + this.get('name');
     },
 
     onRemove: function() {
-      console.log('on destroy');
+
+      var jqXHR = $.ajax({
+        url: this.url(),
+        type: 'DELETE'
+      });
+
+      jqXHR.done(_.bind(this.destroy, this));
+
+      jqXHR.error(function(errArgs) {
+        console.log('error', errArgs);
+      });
     }
 
   });

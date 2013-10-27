@@ -15,6 +15,8 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
         this.toggleDroppable();
       }
 
+      this.$progressEl = this.$el.find('.progress');
+
     },
 
     toggleDroppable: function() {
@@ -42,6 +44,7 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
 
     onAsynchDone: function() {
       this.$el.find('.ajax').stop().fadeOut();
+      this.$progressEl.width(0);
     },
 
     fileSelectHandler: function(e) {
@@ -61,27 +64,28 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
 
       var xhr = new XMLHttpRequest();
 
+      xhr.onreadystatechange = _.bind(this.onReadyStateChange, this);
+      xhr.upload.onerror     = _.bind(this.onError, this);
+      xhr.upload.onprogress  = _.bind(this.onProgress, this);
+
       xhr.open('POST', '/uploads');
       xhr.send(formData);
-      xhr.onreadystatechange = _.bind(this.onReadyStateChange, this);
-      xhr.onerror            = _.bind(this.onError, this);
-      xhr.onprogress         = _.bind(this.onProgress, this);
-
-      console.log(xhr);
       this.onAsynchStart();
     },
 
     onError: function(msg) {
       this.$el.find('.ajax').stop().fadeOut();
+      this.$progressEl.width(0);
       console.log('error', msg);
     },
 
     onProgress: function(e) {
-      console.log(e);
+
       if (e.lengthComputable) {
-        var percentage = (e.loaded / e.total) * 100;
-        console.log(percentage);
+        var percentage = Math.floor((e.loaded / e.total) * 100);
+        this.$progressEl.width(percentage + '%');
       }
+
     },
 
     onReadyStateChange: function(e) {

@@ -1,4 +1,9 @@
-var fs = require('fs');
+var fs = require('fs'),
+    paths = process.env.NODE_ENV === 'development' ? {
+  library: '/media/decoy/SDCARD/media/'
+} : {
+  library: '/home/pi/ext/'
+};
 
 module.exports = function(App) {
 
@@ -24,12 +29,14 @@ module.exports = function(App) {
       res.send({ received: true });
     },
 
+  // API methods
+  // --------------------------------------------------------------------------
     api: {
+
       getPath: function(req, res) {
 
-        var itemType = req.params.type;
-        console.log('itemType', itemType);
-        var path = '/home/pi/ext/' + itemType + '/';
+        var itemType = req.params.type,
+          path       = paths.library + itemType + '/';
 
         fs.readdir( path, function(err, data) {
           if (err) throw err;
@@ -45,6 +52,20 @@ module.exports = function(App) {
 
           res.send(json);
         });
+      },
+
+      removeItem: function(req, res) {
+
+        var itemType = req.params.type,
+          name       = req.params.name,
+          path       = paths.library + itemType + '/' + name;
+
+        fs.unlink(path, function(err) {
+          if (err) throw err;
+          res.json({ deleted: true });
+        });
+
+
       }
     }
 
@@ -52,17 +73,13 @@ module.exports = function(App) {
 
 };
 
+
 function saveFile (fileName, file) {
 
-  var contentType = file.headers['content-type'].split('/')[0];
-  var destPath = '/home/pi/ext/' + contentType + '/' + fileName;
-
-  console.log('contentType', contentType);
-  console.log('temp path', file.path);
-  console.log('dest path', destPath);
-
-  var is = fs.createReadStream(file.path);
-  var os = fs.createWriteStream(destPath);
+  var contentType = file.headers['content-type'].split('/')[0],
+      destPath    = paths.library + contentType + '/' + fileName,
+      is          = fs.createReadStream(file.path),
+      os          = fs.createWriteStream(destPath);
 
   is.pipe(os);
   is.on('end', function() {
