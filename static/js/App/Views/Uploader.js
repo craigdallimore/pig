@@ -38,66 +38,28 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
       this.fileSelectHandler(e);
     },
 
-    onAsynchStart: function() {
-      this.$el.find('.ajax').fadeIn();
-    },
-
-    onAsynchDone: function() {
-      this.$el.find('.ajax').stop().fadeOut();
-      this.$progressEl.width(0);
-    },
-
     fileSelectHandler: function(e) {
 
-      var event  = e.originalEvent ? e.originalEvent : e,
-        files    = event.target.files || event.dataTransfer.files,
-        formData = new FormData();
+      var event = e.originalEvent ? e.originalEvent : e,
+        files   = event.target.files || event.dataTransfer.files,
+        uploader = this;
 
       event.preventDefault();
 
       if (!files) return;
 
-
       _.each(files, function(file) {
-        formData.append(file.name, file);
+        uploader.trigger('upload:start', {
+          name:     file.name,
+          size:     file.size,
+          type:     file.type.split('/')[0],
+          file:     file
+        });
       });
 
-      var xhr = new XMLHttpRequest();
-
-      xhr.onreadystatechange = _.bind(this.onReadyStateChange, this);
-      xhr.upload.onerror     = _.bind(this.onError, this);
-      xhr.upload.onprogress  = _.bind(this.onProgress, this);
-
-      xhr.open('POST', '/uploads');
-      xhr.send(formData);
-      this.onAsynchStart();
     },
 
-    onError: function(msg) {
-      this.$el.find('.ajax').stop().fadeOut();
-      this.$progressEl.width(0);
-      console.log('error', msg);
-    },
-
-    onProgress: function(e) {
-
-      if (e.lengthComputable) {
-        var percentage = Math.floor((e.loaded / e.total) * 100);
-        this.$progressEl.width(percentage + '%');
-      }
-
-    },
-
-    onReadyStateChange: function(e) {
-      var xhr = e.target;
-
-      if (xhr.readyState === 4) {
-        this.onAsynchDone();
-      }
-
-    }
 
   });
 
 });
-

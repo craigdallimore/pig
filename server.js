@@ -1,8 +1,10 @@
 var express = require('express'),
     App     = express(),
     server  = require('http').createServer(App),
-    routes  = require('./server/route')(App),
-    paths = process.env.NODE_ENV === 'development' ?
+    io      = require('socket.io').listen(server),
+    routes  = require('./server/route')(App, io),
+
+    paths   = process.env.NODE_ENV === 'development' ?
       { library: '/home/decoy/SDCARD/media/' } :
       { library: '/home/pi/ext/' };
 
@@ -32,6 +34,7 @@ App.get('/',                        routes.index);
 App.post('/uploads',                routes.onUploadStart, routes.onUploadComplete);
 App.get('/api/item/:type',          routes.api.getPath);
 App.delete('/api/item/:type/:name', routes.api.removeItem);
+
 
 // Start server
 if (!module.parent) {

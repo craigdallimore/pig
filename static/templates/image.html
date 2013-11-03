@@ -1,3 +1,7 @@
-<img src="{{ path }}" width="120" alt="{{ name }}"/>
-<a href="{{ path }}">{{ name }}</a>
-
+<% if( typeof path !== 'undefined' ) { %>
+  <button class="btn-remove">X</button>
+  <img src="{{ path }}" width="120" alt="{{ name }}"/>
+<% } else { %>
+  <p>{{ name }} uploading</p>
+  <div class="progress"></div>
+<% } %>

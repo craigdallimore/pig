@@ -1,0 +1,8 @@
+<% if( typeof path !== 'undefined' ) { %>
+  <button class="btn-remove">X</button>
+  <a href="{{ path }}">{{ name }}</a>
+<% } else { %>
+  <p>{{ name }} uploading</p>
+  <div class="progress"></div>
+<% } %>
+

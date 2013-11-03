@@ -18,6 +18,10 @@
     "chai": "1.5.0",
     "sinon-chai": "2.4.0",
     "sinon": "1.7.2",
-    "grunt-contrib-coffee": "~0.7.0"
+    "grunt-contrib-coffee": "~0.7.0",
+    "socket.io": "~0.9.16"
+  },
+  "dependencies": {
+    "lodash": "~2.2.1"
   }
 }

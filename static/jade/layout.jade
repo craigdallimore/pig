@@ -49,12 +49,14 @@ html.no-js(lang='en')
     // <![endif]
 
 
+    script(src='//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/1.0.4-bundled/backbone.marionette.min.js')
 
     //- Failing that, use local libraries
     script.
+      window.io       || document.write('<script src="/static/js/libs/socket.io.min.js"><\/script>');
       window._        || document.write('<script src="/static/js/libs/underscore-min.js"><\/script>');
       window.Backbone || document.write('<script src="/static/js/libs/backbone-min.js"><\/script>');
       (window.Backbone && window.Backbone.Marionette) || document.write('<script src="/static/js/libs/backbone.marionette.min.js"><\/script>');

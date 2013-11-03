@@ -103,9 +103,7 @@ module.exports = (grunt) ->
             '<%= dirs.app %>Views/Uploader.js'
             '<%= dirs.app %>Views/MediaListView.js'
             '<%= dirs.app %>Views/FileItem.js'
-            '<%= dirs.app %>Collection/Image.js'
-            '<%= dirs.app %>Collection/Audio.js'
-            '<%= dirs.app %>Collection/Video.js'
+            '<%= dirs.app %>Collection/File.js'
             '<%= dirs.app %>Main.js'
           ]
 

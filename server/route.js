@@ -1,11 +1,78 @@
-var fs = require('fs'),
-    paths = process.env.NODE_ENV === 'development' ? {
-  library: '/media/decoy/SDCARD/media/'
-} : {
-  library: '/home/pi/ext/'
-};
+var fs  = require('fs'),
+  _     = require('lodash'),
 
-module.exports = function(App) {
+  library = process.env.NODE_ENV === 'development' ?
+    '/media/decoy/SDCARD/media/' :
+    '/home/pi/ext/';
+
+// Get directory list
+// ----------------------------------------------------------------------------
+
+function getDirList(type, callback) {
+
+  fs.readdir(library + type + '/', function(err, files) {
+    if (err) throw err;
+
+    callback(_.map(files, function(name) {
+
+      return {
+        name: name,
+        type: type,
+        path: '/files/' + type + '/' + name
+      };
+
+    }));
+
+  });
+}
+
+function inform(type, socket) {
+
+    getDirList(type, function(list) {
+      socket.emit('list:' + type, list);
+    });
+
+}
+
+module.exports = function(App, io) {
+
+  io.sockets.on('connection', function(socket) {
+
+    inform('video', socket);
+
+    App.on('file:saved', function(file) {
+      socket.emit('file:saved', file);
+    });
+
+  });
+
+  function saveFile (name, file) {
+
+    var type     = file.headers['content-type'].split('/')[0],
+        destPath = library + type + '/' + name,
+        is       = fs.createReadStream(file.path),
+        os       = fs.createWriteStream(destPath);
+
+    is.on('end', function() {
+
+      console.log('on end');
+
+      App.emit('file:saved', {
+        name: name,
+        type: type,
+        path: '/files/' + type + '/' + name
+      });
+
+      fs.unlinkSync(file.path);
+    });
+
+    is.pipe(os);
+
+  }
+
+
+
+  // All the actual routing stuff here :/
 
   return {
 
@@ -29,39 +96,28 @@ module.exports = function(App) {
       res.send({ received: true });
     },
 
-  // API methods
-  // --------------------------------------------------------------------------
+    // API methods
+    // --------------------------------------------------------------------------
     api: {
 
       getPath: function(req, res) {
 
-        var itemType = req.params.type,
-          path       = paths.library + itemType + '/';
+        var itemType = req.params.type;
 
-        fs.readdir( path, function(err, data) {
-          if (err) throw err;
-
-          var json = data.map(function(item) {
-
-            return {
-              name: item,
-              path: '/files/' + itemType + '/' + item
-            };
-
-          }) || [];
-
-          res.send(json);
+        getDirList(itemType + '/', function(list) {
+          res.send(list);
         });
+
       },
 
       removeItem: function(req, res) {
 
         var itemType = req.params.type,
           name       = req.params.name,
-          path       = paths.library + itemType + '/' + name;
+          path       = library + itemType + '/' + name;
 
         fs.unlink(path, function(err) {
-          if (err) throw err;
+          if (err) return res.json({ deleted: false, error: 'File not found' });
           res.json({ deleted: true });
         });
 
@@ -72,20 +128,3 @@ module.exports = function(App) {
   };
 
 };
-
-
-function saveFile (fileName, file) {
-
-  var contentType = file.headers['content-type'].split('/')[0],
-      destPath    = paths.library + contentType + '/' + fileName,
-      is          = fs.createReadStream(file.path),
-      os          = fs.createWriteStream(destPath);
-
-  is.pipe(os);
-  is.on('end', function() {
-    console.log('on end');
-    fs.unlinkSync(file.path);
-  });
-
-}
-
