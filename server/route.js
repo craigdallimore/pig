@@ -39,6 +39,8 @@ module.exports = function(App, io) {
   io.sockets.on('connection', function(socket) {
 
     inform('video', socket);
+    inform('image', socket);
+    inform('audio', socket);
 
     App.on('file:saved', function(file) {
       socket.emit('file:saved', file);

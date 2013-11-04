@@ -7,7 +7,7 @@ App.module('Model', function(Model, App, Backbone, Marionette, $, _) {
       _.extend(this, Backbone.Events);
       this.on('remove', this.onRemove, this);
 
-      if (! this.get('uploaded')) {
+      if (! this.get('path')) {
         this.upload();
       }
 H
@@ -25,8 +25,8 @@ H
       formData.append(this.get('name'), this.get('file'));
 
       xhr.onreadystatechange = _.bind(this.onReadyStateChange, this);
-      xhr.upload.onerror     = _.bind(this.onError, this);
       xhr.upload.onprogress  = _.bind(this.onProgress, this);
+      xhr.upload.onerror     = _.bind(this.onError, this);
 
       xhr.open('POST', '/uploads');
       xhr.send(formData);

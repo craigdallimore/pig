@@ -30,9 +30,9 @@ App.on('start', function() {
     addAudio = _.bind(audioCollection.add, audioCollection),
     addImage = _.bind(imageCollection.add, imageCollection);
 
-  socket.on('list:video',       addVideo);
-  socket.on('list:audio',       addAudio);
-  socket.on('list:image',       addImage);
+  socket.on('list:video', addVideo);
+  socket.on('list:audio', addAudio);
+  socket.on('list:image', addImage);
 
   uploader.bind('upload:start', function(file) {
     switch (file.type) {
