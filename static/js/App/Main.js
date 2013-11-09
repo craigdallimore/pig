@@ -36,9 +36,9 @@ App.on('start', function() {
 
   uploader.bind('upload:start', function(file) {
     switch (file.type) {
-      case 'video': addVideo(file); break;
-      case 'audio': addAudio(file); break;
-      case 'image': addImage(file); break;
+      case 'video': addVideo(file, { at: 0 }); break;
+      case 'audio': addAudio(file, { at: 0 }); break;
+      case 'image': addImage(file, { at: 0 }); break;
     }
   });
 
