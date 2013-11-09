@@ -6,4 +6,4 @@ static/dist/
 *.swp
 *.map
 index.html
-/upload/
+/uploads/
