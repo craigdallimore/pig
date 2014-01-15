@@ -7,7 +7,7 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
       var childrenContainer = $(collectionView.el).find('ul');
 
       var children = childrenContainer.children();
-      if (children.size() + 1 === index) {
+      if (!children.size() && index === 0)  {
         childrenContainer.append(itemView.el);
       } else {
         childrenContainer.children().eq(index).before(itemView.el);
