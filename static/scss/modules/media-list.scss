@@ -14,7 +14,9 @@
   }
 
   button {
-    margin: 10px 0 0 0;
+    position: absolute;
+    top: 10px;
+    right: 0;
   }
 
   ul {
@@ -22,6 +24,7 @@
   }
 
   li {
+    position: relative;
     border-top: 1px solid #dadada;
     padding-top: 10px;
     word-wrap: break-word;
@@ -29,6 +32,20 @@
 
   a {
     color: darken(pink, 25%);
+  }
+
+}
+
+@media all and (max-width: $bp_1), all and (max-device-width: $bp_1) {
+
+  .media-lists {
+    margin: 0 20px;
+  }
+
+  .media-list {
+    clear: left;
+    width: 100%;
+    margin: 20px 0 0;
   }
 
 }

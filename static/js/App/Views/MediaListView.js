@@ -7,10 +7,10 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
       var childrenContainer = $(collectionView.el).find('ul');
 
       var children = childrenContainer.children();
-      if (!children.size() && index === 0)  {
+      if (!children.size())  {
         childrenContainer.append(itemView.el);
       } else {
-        childrenContainer.children().eq(index).before(itemView.el);
+        childrenContainer.children().eq(0).before(itemView.el);
       }
 
     },
