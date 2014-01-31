@@ -1,6 +1,6 @@
-App.module('Model', function(Model, App, Backbone, Marionette, $, _) {
+define([ 'backbone' ], function(Backbone) {
 
-  Model.FileItem = Backbone.Model.extend({
+  return Backbone.Model.extend({
 
     initialize: function() {
 
@@ -10,7 +10,7 @@ App.module('Model', function(Model, App, Backbone, Marionette, $, _) {
       if (! this.get('path')) {
         this.upload();
       }
-H
+
     },
 
     url: function() {

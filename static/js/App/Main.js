@@ -1,29 +1,32 @@
-App.on('start', function() {
+define([
 
-  var socket = io.connect(location.href);
+  'socketio',
+  'App/Views/Uploader',
+  'App/Collection/File',
+  'App/Views/MediaList'
 
+  ], function( io, UploaderView, FileCollection, MediaListView ) {
 
-  var uploader      = new App.View.Uploader({ el: '#upload' }),
-    imageCollection = new App.Collection.File({ url: '/api/item/image' }),
-    audioCollection = new App.Collection.File({ url: '/api/item/audio' }),
-    videoCollection = new App.Collection.File({ url: '/api/item/video' }),
+  var socket = io.connect(location.href),
 
-    audioCollectionView = new App.View.MediaListView({
+    uploader        = new UploaderView({ el: '#upload' }),
+    imageCollection = new FileCollection({ url: '/api/item/image' }),
+    audioCollection = new FileCollection({ url: '/api/item/audio' }),
+    videoCollection = new FileCollection({ url: '/api/item/video' }),
+
+    audioCollectionView = new MediaListView({
       el:         '#audio-list',
-      collection: audioCollection,
-      itemView:   App.View.FileItem
+      collection: audioCollection
     }),
 
-    imageCollectionView = new App.View.MediaListView({
+    imageCollectionView = new MediaListView({
       el:         '#image-list',
-      collection: imageCollection,
-      itemView:   App.View.FileItem
+      collection: imageCollection
     }),
 
-    videoCollectionView = new App.View.MediaListView({
+    videoCollectionView = new MediaListView({
       el:         '#video-list',
-      collection: videoCollection,
-      itemView:   App.View.FileItem
+      collection: videoCollection
     }),
 
     addVideo = _.bind(videoCollection.add, videoCollection),
@@ -35,11 +38,15 @@ App.on('start', function() {
   socket.on('list:image', addImage);
 
   uploader.bind('upload:start', function(file) {
+
     switch (file.type) {
+
       case 'video': addVideo(file, { at: 0 }); break;
       case 'audio': addAudio(file, { at: 0 }); break;
       case 'image': addImage(file, { at: 0 }); break;
+
     }
+
   });
 
   socket.on('file:saved', function(file) {
@@ -56,9 +63,6 @@ App.on('start', function() {
     }
   });
 
+
 });
 
-
-
-
-App.start();

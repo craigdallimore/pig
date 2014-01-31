@@ -1,6 +1,6 @@
-App.module('View', function(View, App, Backbone, Marionette, $, _) {
+define([ 'backbone' ], function(Backbone) {
 
-  View.Uploader = Backbone.View.extend({
+  return Backbone.View.extend({
 
     events: {
       'change    #file-select': 'fileSelectHandler',
@@ -20,28 +20,36 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
     },
 
     toggleDroppable: function() {
+
       this.$el.find('#btn-submit, #file-select, label[for="file-select"]').hide();
       this.$el.find('#file-drag').show();
+
     },
 
     onDragover: function(e) {
+
       e.preventDefault();
       this.$el.find('#file-drag').addClass('hover');
+
     },
 
     onDragout: function() {
+
       this.$el.find('#file-drag').removeClass('hover');
+
     },
 
     onDrop: function(e) {
+
       this.$el.find('#file-drag').removeClass('hover');
       this.fileSelectHandler(e);
+
     },
 
     fileSelectHandler: function(e) {
 
-      var event = e.originalEvent ? e.originalEvent : e,
-        files   = event.target.files || event.dataTransfer.files,
+      var event  = e.originalEvent ? e.originalEvent : e,
+        files    = event.target.files || event.dataTransfer.files,
         uploader = this;
 
       event.preventDefault();
@@ -57,9 +65,9 @@ App.module('View', function(View, App, Backbone, Marionette, $, _) {
         });
       });
 
-    },
-
+    }
 
   });
 
 });
+

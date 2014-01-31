@@ -1,12 +1,14 @@
-App.module('View', function(View, App, Backbone, Marionette, $, _) {
+define([ 'marionette', 'App/Views/FileItem' ], function(Marionette, FileItemView) {
 
-  View.MediaListView = Marionette.CompositeView.extend({
+  return Marionette.CompositeView.extend({
+
+    itemView: FileItemView,
 
     appendHtml: function(collectionView, itemView, index){
 
       var childrenContainer = $(collectionView.el).find('ul');
-
       var children = childrenContainer.children();
+
       if (!children.size())  {
         childrenContainer.append(itemView.el);
       } else {

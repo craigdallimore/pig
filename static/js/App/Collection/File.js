@@ -1,8 +1,8 @@
-App.module('Collection', function(Collection, App, Backbone, Marionette, $, _) {
+define([ 'backbone', 'App/Models/FileItem' ], function(Backbone, FileItem) {
 
-  Collection.File = Backbone.Collection.extend({
+  return Backbone.Collection.extend({
 
-    model: App.Model.FileItem
+    model: FileItem
 
   });
 
