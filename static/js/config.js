@@ -3,8 +3,6 @@
 
 require.config({
 
-  //baseUrl: '../js/',
-
   paths: {
 
     underscore: 'libs/underscore-min',

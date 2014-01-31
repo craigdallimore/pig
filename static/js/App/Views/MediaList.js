@@ -4,6 +4,8 @@ define([ 'marionette', 'App/Views/FileItem' ], function(Marionette, FileItemView
 
     itemView: FileItemView,
 
+    itemViewContainer: 'ul',
+
     appendHtml: function(collectionView, itemView, index){
 
       var childrenContainer = $(collectionView.el).find('ul');
@@ -17,7 +19,13 @@ define([ 'marionette', 'App/Views/FileItem' ], function(Marionette, FileItemView
 
     },
 
-    itemViewContainer: 'ul'
+    filter: function(term) {
+
+      this.children.each(function(child) {
+        child.filter(term);
+      });
+
+    }
 
   });
 

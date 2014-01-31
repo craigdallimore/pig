@@ -38,6 +38,15 @@ define([ 'marionette' ], function(Marionette) {
 
     },
 
+    filter: function(term) {
+
+      var name = this.model.get('name').toLowerCase(),
+        match  = (term.length === 0 || name.indexOf(term.toLowerCase()) > -1 );
+
+      this.$el[ match ? 'show' : 'hide' ]();
+
+    },
+
     render: function() {
 
       var template = Marionette.TemplateCache.get('#tmpl-' + this.model.get('type'));
