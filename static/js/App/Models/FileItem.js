@@ -5,7 +5,9 @@ define([ 'backbone' ], function(Backbone) {
     initialize: function() {
 
       _.extend(this, Backbone.Events);
+
       this.on('remove', this.onRemove, this);
+      this.on('change:newName', this.updateName, this);
 
       if (! this.get('path')) {
         this.upload();
@@ -14,12 +16,14 @@ define([ 'backbone' ], function(Backbone) {
     },
 
     url: function() {
+
       return '/api/item/' + this.get('type') + '/' + this.get('name');
+
     },
 
     upload: function() {
 
-      var xhr = new XMLHttpRequest(),
+      var xhr      = new XMLHttpRequest(),
           formData = new FormData();
 
       formData.append(this.get('name'), this.get('file'));
@@ -33,8 +37,22 @@ define([ 'backbone' ], function(Backbone) {
 
     },
 
+    updateName: function(model, name) {
+
+      this.save().then(function(response) {
+
+        if(response.renamed) {
+          model.set('name', name);
+        }
+
+      });
+
+    },
+
     onError: function(msg) {
+
       console.log('error', msg);
+
     },
 
     onProgress: function(e) {
@@ -69,7 +87,9 @@ define([ 'backbone' ], function(Backbone) {
     },
 
     onDelete: function() {
+
       this.collection.remove(this, { silent: true });
+
     }
 
   });

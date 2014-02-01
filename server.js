@@ -32,6 +32,7 @@ App.configure(function() {
 // Routes
 App.get('/',                        routes.index);
 App.post('/uploads',                routes.onUploadStart, routes.onUploadComplete);
+App.post('/api/item/:type/:name',   routes.api.onNameChange);
 App.get('/api/item/:type',          routes.api.getPath);
 App.delete('/api/item/:type/:name', routes.api.removeItem);
 

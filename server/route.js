@@ -112,6 +112,21 @@ module.exports = function(App, io) {
 
       },
 
+      onNameChange: function(req, res) {
+
+        var itemType = req.params.type,
+          oldName    = library + itemType + '/' + req.body.name,
+          newName    = library + itemType + '/' + req.body.newName;
+
+        fs.rename(oldName, newName, function(err) {
+          if (err) return res.json({ renamed: false });
+
+          res.json({ renamed: true });
+
+        });
+
+      },
+
       removeItem: function(req, res) {
 
         var itemType = req.params.type,

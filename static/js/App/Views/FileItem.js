@@ -6,7 +6,10 @@ define([ 'marionette' ], function(Marionette) {
 
     events: {
 
-      'click .btn-remove': 'onRemoveClick'
+      'click .btn-remove': 'onRemoveClick',
+      'click .name':       'swapNameForInput',
+      'blur input':        'changeName',
+      'keyup input':       'onKeyUp'
 
     },
 
@@ -15,6 +18,7 @@ define([ 'marionette' ], function(Marionette) {
       this.model.bind('change:progress', this.onProgress, this);
       this.model.bind('change:uploaded', this.onComplete, this);
       this.model.bind('change:path',     this.render, this);
+      this.model.bind('change:name',     this.render, this);
 
     },
 
@@ -35,6 +39,35 @@ define([ 'marionette' ], function(Marionette) {
       e.preventDefault();
       this.model.trigger('remove');
       this.remove();
+
+    },
+
+    swapNameForInput: function(e) {
+
+      $(e.target).hide();
+      this.$el.find('input').show().focus();
+
+    },
+
+    swapInputForName: function() {
+
+      this.$el.find('.name').show();
+      this.$el.find('input').hide();
+
+    },
+
+    onKeyUp: function(e) {
+
+      if(e.keyCode === 13) {
+        this.changeName();
+      }
+
+    },
+
+    changeName: function() {
+
+      this.model.set('newName', this.$el.find('input').val());
+      this.swapInputForName();
 
     },
 
