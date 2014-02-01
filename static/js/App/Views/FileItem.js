@@ -45,7 +45,13 @@ define([ 'marionette' ], function(Marionette) {
     swapNameForInput: function(e) {
 
       $(e.target).hide();
-      this.$el.find('input').show().focus();
+
+      var $input = this.$el.find('input');
+
+      $input.show().focus();
+
+      // Select up to the last dot
+      $input[0].selectionEnd = $input[0].value.lastIndexOf('.');
 
     },
 
