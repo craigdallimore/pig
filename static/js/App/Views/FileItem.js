@@ -19,6 +19,7 @@ define([ 'marionette' ], function(Marionette) {
       this.model.bind('change:uploaded', this.onComplete, this);
       this.model.bind('change:path',     this.render, this);
       this.model.bind('change:name',     this.render, this);
+      this.model.bind('upload:error',    this.onError, this);
 
     },
 
@@ -34,11 +35,39 @@ define([ 'marionette' ], function(Marionette) {
 
     },
 
+    onError: function(response) {
+
+      var $p = this.$el.find('p'),
+        $btnRetry = $('<button title="' + response  + '" class="btn-retry">Retry?</button>');
+
+      $p.text(this.model.get('name') + ' [error!]');
+      this.$progressEl.width(0);
+
+      $btnRetry.insertAfter($p);
+
+      $btnRetry.on('click', _.bind(this.retry, this));
+
+    },
+
     onRemoveClick: function(e) {
 
       e.preventDefault();
-      this.model.trigger('remove');
-      this.remove();
+
+      var msg = 'Are you sure you want to remove ' + this.model.get('name') + '?';
+
+      if (confirm(msg) ) {
+
+        this.model.trigger('remove');
+        this.remove();
+
+      }
+
+    },
+
+    retry: function() {
+
+      this.$el.find('.btn-retry').off().remove();
+      this.model.upload();
 
     },
 

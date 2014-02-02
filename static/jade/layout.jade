@@ -41,7 +41,7 @@ html.no-js(lang='en')
     script#tmpl-audio(type='text/template').
       <% if( typeof path !== 'undefined' ) { %>
         <button class="btn-remove">X</button>
-        <a class="link" href="<%= path %>">&#x25BC;</a>
+        <a class="link" href="<%= path %>">&#x25BC; Download</a>
         <p class="name"><%= name %></p>
         <input class="hide" type="text" value="<%= name %>" />
       <% } else { %>
@@ -61,7 +61,7 @@ html.no-js(lang='en')
     script#tmpl-video(type='text/template').
       <% if( typeof path !== 'undefined' ) { %>
         <button class="btn-remove">X</button>
-        <a class="link" href="<%= path %>">&#x25BC;</a>
+        <a class="link" href="<%= path %>">&#x25BC; Download</a>
         <p class="name"><%= name %></p>
         <input class="hide" type="text" value="<%= name %>" />
       <% } else { %>

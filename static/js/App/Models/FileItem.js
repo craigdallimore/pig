@@ -68,9 +68,16 @@ define([ 'backbone' ], function(Backbone) {
 
       var xhr = e.target;
 
-      if (xhr.readyState === 4) {
-        this.set('uploaded', true);
+      if (xhr.readyState !== 4) { return; }
+
+      if (xhr.status !== 200) {
+
+        this.trigger('upload:error', xhr.response);
+        return;
+
       }
+
+      this.set('uploaded', true);
 
     },
 
