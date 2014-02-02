@@ -2,11 +2,8 @@ var express = require('express'),
     App     = express(),
     server  = require('http').createServer(App),
     io      = require('socket.io').listen(server),
-    routes  = require('./server/route')(App, io),
+    routes  = require('./server/route')(App, io);
 
-    paths   = process.env.NODE_ENV === 'development' ?
-      { library: '/home/decoy/SDCARD/media/' } :
-      { library: '/home/pi/ext/' };
 
 // Using jade templating
 App.set('views', __dirname + '/static/jade');
@@ -25,7 +22,7 @@ App.configure(function() {
     uploadDir: __dirname + '/uploads'
   }));
   App.use('./static', express.static(__dirname + './static'));
-  App.use('/files', express.static(paths.library));
+  //App.use('/files', express.static(paths.library));
   App.use(express.static(__dirname));
 });
 

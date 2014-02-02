@@ -86,8 +86,8 @@ module.exports = function(App, io) {
 
     file: function(req, res) {
 
-      var file = __dirname + '/files/' + req.params.type + '/' + req.params.name;
-      res.download(file); // Set disposition and send it.
+      var file = library + req.params.type + '/' + req.params.name;
+      fs.createReadStream(file).pipe(res);
 
     },
 
