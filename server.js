@@ -31,6 +31,7 @@ App.configure(function() {
 
 // Routes
 App.get('/',                        routes.index);
+App.get('/files/:type/:name',       routes.file);
 App.post('/uploads',                routes.onUploadStart, routes.onUploadComplete);
 App.post('/api/item/:type/:name',   routes.api.onNameChange);
 App.get('/api/item/:type',          routes.api.getPath);

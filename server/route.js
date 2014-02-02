@@ -84,6 +84,13 @@ module.exports = function(App, io) {
       });
     },
 
+    file: function(req, res) {
+
+      var file = __dirname + '/files/' + req.params.type + '/' + req.params.name;
+      res.download(file); // Set disposition and send it.
+
+    },
+
     onUploadStart: function(req, res, next) {
 
       for (var fileName in req.files) {
