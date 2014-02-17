@@ -1,43 +1,38 @@
+// Set up
+// ----------------------------------------------------------------------------
 var express = require('express'),
-    App     = express(),
-    server  = require('http').createServer(App),
-    io      = require('socket.io').listen(server),
-    routes  = require('./server/route')(App, io);
+  app       = express(),
+  server    = require('http').createServer(app),
+  io        = require('socket.io').listen(server),
+  port      = process.env.PORT || 3000;
 
+// Configuration
+// ----------------------------------------------------------------------------
+app.configure(function() {
 
-// Using jade templating
-App.set('views', __dirname + '/static/jade');
-App.set('view engine', 'jade');
+  app.set('views', __dirname + '/server/views/');
+  app.use('view engine', 'jade');
 
-// Log incoming requests to the console
-App.use(express.logger('dev'));
+  app.use('./static', express.static(__dirname + './static'));
+  app.use(express.static(__dirname));
 
-
-
-// Connect configuration
-App.configure(function() {
-  App.use(express.bodyParser({
+  app.use(express.bodyParser({
     keepExtensions: true,
     limit: 4100000000,
     uploadDir: __dirname + '/uploads'
   }));
-  App.use('./static', express.static(__dirname + './static'));
-  //App.use('/files', express.static(paths.library));
-  App.use(express.static(__dirname));
+
+
+  app.use(express.logger('dev'));
+
 });
 
 // Routes
-App.get('/',                        routes.index);
-App.get('/files/:type/:name',       routes.file);
-App.post('/uploads',                routes.onUploadStart, routes.onUploadComplete);
-App.post('/api/item/:type/:name',   routes.api.onNameChange);
-App.get('/api/item/:type',          routes.api.getPath);
-App.delete('/api/item/:type/:name', routes.api.removeItem);
+// ----------------------------------------------------------------------------
+require('./server/route')(app, io);
 
 
-// Start server
-if (!module.parent) {
-  server.listen(process.env.VCAP_APP_PORT || 3000);
-  console.log("Listening on port %d", server.address().port);
-}
-
+// Launch
+// ----------------------------------------------------------------------------
+app.listen(port);
+console.log('Node server listening on port ' + port);

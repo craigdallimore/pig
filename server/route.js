@@ -1,5 +1,5 @@
-var fs  = require('fs'),
-  _     = require('lodash'),
+var fs = require('fs'),
+  _    = require('lodash'),
 
   library = process.env.NODE_ENV === 'development' ?
     '/media/decoy/SDCARD/media/' :
@@ -34,7 +34,9 @@ function inform(type, socket) {
 
 }
 
-module.exports = function(App, io) {
+// Routes
+
+module.exports = function(app, io) {
 
   io.sockets.on('connection', function(socket) {
 
@@ -42,8 +44,10 @@ module.exports = function(App, io) {
     inform('image', socket);
     inform('audio', socket);
 
-    App.on('file:saved', function(file) {
+    app.on('file:saved', function(file) {
+
       socket.emit('file:saved', file);
+
     });
 
   });
@@ -57,9 +61,7 @@ module.exports = function(App, io) {
 
     is.on('end', function() {
 
-      console.log('on end');
-
-      App.emit('file:saved', {
+      app.emit('file:saved', {
         name: name,
         type: type,
         path: '/files/' + type + '/' + name
@@ -72,83 +74,88 @@ module.exports = function(App, io) {
 
   }
 
+  // Routes
+  // --------------------------------------------------------------------------
 
+  app.get('/',                  getIndex);
+  app.get('/files/:type/:name', getFile);
+  app.post('/uploads',          onUploadStart, onUploadComplete);
 
-  // All the actual routing stuff here :/
+  app.post('/api/item/:type/:name',   postNameChange);
+  app.get('/api/item/:type',          getPath);
+  app.delete('/api/item/:type/:name', removeItem);
 
-  return {
+  function getIndex(req, res) {
 
-    index: function(req, res) {
-      res.render('index', {
-        title: req.get('host')
-      });
-    },
+    res.render('index.jade', {
+      title: req.get('host')
+    });
 
-    file: function(req, res) {
+  }
 
-      var file = library + req.params.type + '/' + req.params.name;
-      fs.createReadStream(file).pipe(res);
+  function getFile(req, res) {
 
-    },
+    var file = library + req.params.type + '/' + req.params.name;
+    fs.createReadStream(file).pipe(res);
 
-    onUploadStart: function(req, res, next) {
+  }
 
-      for (var fileName in req.files) {
-        saveFile(fileName, req.files[fileName]);
-      }
+  function onUploadStart(req, res, next) {
 
-      next();
-
-    },
-
-    onUploadComplete: function(req, res) {
-      res.send({ received: true });
-    },
-
-    // API methods
-    // --------------------------------------------------------------------------
-    api: {
-
-      getPath: function(req, res) {
-
-        var itemType = req.params.type;
-
-        getDirList(itemType + '/', function(list) {
-          res.send(list);
-        });
-
-      },
-
-      onNameChange: function(req, res) {
-
-        var itemType = req.params.type,
-          oldName    = library + itemType + '/' + req.body.name,
-          newName    = library + itemType + '/' + req.body.newName;
-
-        fs.rename(oldName, newName, function(err) {
-          if (err) return res.json({ renamed: false });
-
-          res.json({ renamed: true });
-
-        });
-
-      },
-
-      removeItem: function(req, res) {
-
-        var itemType = req.params.type,
-          name       = req.params.name,
-          path       = library + itemType + '/' + name;
-
-        fs.unlink(path, function(err) {
-          if (err) return res.json({ deleted: false, error: 'File not found' });
-          res.json({ deleted: true });
-        });
-
-
-      }
+    for (var fileName in req.files) {
+      saveFile(fileName, req.files[fileName]);
     }
 
-  };
+    next();
+
+  }
+
+  function onUploadComplete(req, res) {
+
+    res.send({ received: true });
+
+  }
+
+  // API methods
+  // --------------------------------------------------------------------------
+
+  function getPath(req, res) {
+
+    var itemType = req.params.type;
+
+    getDirList(itemType + '/', function(list) {
+      res.send(list);
+    });
+
+  }
+
+  function postNameChange(req, res) {
+
+    var itemType = req.params.type,
+      oldName    = library + itemType + '/' + req.body.name,
+      newName    = library + itemType + '/' + req.body.newName;
+
+    fs.rename(oldName, newName, function(err) {
+      if (err) return res.json({ renamed: false });
+
+      res.json({ renamed: true });
+
+    });
+
+  }
+
+  function removeItem(req, res) {
+
+    var itemType = req.params.type,
+      name       = req.params.name,
+      path       = library + itemType + '/' + name;
+
+    fs.unlink(path, function(err) {
+      if (err) return res.json({ deleted: false, error: 'File not found' });
+      res.json({ deleted: true });
+    });
+
+
+  }
 
 };
