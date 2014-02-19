@@ -69,4 +69,15 @@ html.no-js(lang='en')
         <div class="progress"></div>
       <% } %>
 
+    script#tmpl-confirm(type='text/template').
+      <div class="horizon">
+        <div class="dialog zoomout">
+
+          <h3><%= msg %>?</h3>
+          <button class="btn-ok">OK</button>
+          <button class="btn-cancel">Cancel</button>
+
+        </div>
+      </div>
+
 //- KAIZEN

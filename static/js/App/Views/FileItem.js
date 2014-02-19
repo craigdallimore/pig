@@ -1,4 +1,4 @@
-define([ 'marionette' ], function(Marionette) {
+define([ 'marionette', 'App/Views/Confirm' ], function(Marionette, ConfirmView) {
 
   return Marionette.ItemView.extend({
 
@@ -49,18 +49,24 @@ define([ 'marionette' ], function(Marionette) {
 
     },
 
+    onRemove: function() {
+
+      this.model.trigger('remove');
+      this.remove();
+
+    },
+
     onRemoveClick: function(e) {
 
       e.preventDefault();
 
-      var msg = 'Are you sure you want to remove ' + this.model.get('name') + '?';
+      var msg    = 'Are you sure you want to remove ' + this.model.get('name') + '?',
+        callback = _.bind(this.onRemove, this);
 
-      if (confirm(msg) ) {
-
-        this.model.trigger('remove');
-        this.remove();
-
-      }
+      var confirmView = new ConfirmView({
+        msg:      msg,
+        callback: callback
+      });
 
     },
 

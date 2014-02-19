@@ -10,18 +10,16 @@ var express = require('express'),
 // ----------------------------------------------------------------------------
 app.configure(function() {
 
-  app.set('views', __dirname + '/server/views/');
-  app.use('view engine', 'jade');
-
   app.use('./static', express.static(__dirname + './static'));
   app.use(express.static(__dirname));
+  app.set('views', __dirname + '/server/views/');
+  app.use('view engine', 'jade');
 
   app.use(express.bodyParser({
     keepExtensions: true,
     limit: 4100000000,
     uploadDir: __dirname + '/uploads'
   }));
-
 
   app.use(express.logger('dev'));
 
@@ -34,5 +32,5 @@ require('./server/route')(app, io);
 
 // Launch
 // ----------------------------------------------------------------------------
-app.listen(port);
+server.listen(port);
 console.log('Node server listening on port ' + port);
