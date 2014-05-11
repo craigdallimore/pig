@@ -15,8 +15,9 @@
 
 .horizon {
 
-  -webkit-perspective: 400;
-  perspective: 400;
+  -webkit-perspective: 400px;
+  -moz-perspective: 400px;
+  perspective: 400px;
 
   height: 1px;
   top: 50%;
@@ -47,6 +48,7 @@
 .zoomout {
 
   -webkit-transform: translate3d(0, 0, 6em);
+  -moz-transform: translate3d(0, 0, 6em);
   transform: translate3d(0, 0, 6em);
   opacity: 0;
 

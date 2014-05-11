@@ -6,4 +6,7 @@ static/dist/
 *.swp
 *.map
 index.html
-/uploads/
+*.mp4
+*.mp3
+*.avi
+*.mkv
