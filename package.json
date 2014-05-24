@@ -1,12 +1,13 @@
 {
-  "name": "ProjectTemplate",
-  "description": "Project Template",
-  "version": "0.0.1",
+  "name": "Pig",
+  "description": "Pig Media Uploader",
+  "version": "0.0.2",
   "private": true,
   "devDependencies": {
-    "grunt": "0.4.1",
-    "grunt-contrib-watch": "0.2.0",
-    "grunt-contrib-sass": "~0.6.0"
+    "coffee-script": "~1.7.1",
+    "gulp": "~3.6.2",
+    "gulp-sass": "~0.7.1",
+    "gulp-rename": "~1.2.0"
   },
   "dependencies": {
     "jade": "*",

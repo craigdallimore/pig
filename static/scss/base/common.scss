@@ -1,38 +1,43 @@
-/* Globals
----------------------------------------------------------------------------- */
+// Globals
+// ----------------------------------------------------------------------------
 
 * {
   @include box-sizing(border-box);
 }
 
 body {
-  background: $clr_bg;
-  color: $clr_body_copy;
+  background : $clr_bg;
+  color      : $clr_body_copy;
 
 
   font: {
-    size: 0.9em;
-    family: arial, helvetica, sans-serif;
+    size   : .9em;
+    family : arial, helvetica, sans-serif;
   }
 }
 
 .clearfix:after {
-  content: "";
-  clear: both;
-  display: block;
-};
+  clear   : both;
+  content : "";
+  display : block;
+}
 
-.ir { /* Image Replacement */
-  text-indent: -999em;
-  white-space: nowrap;
-  overflow: hidden;
+.ir { // Image Replacement
+  text-indent : -999em;
+  overflow    : hidden;
+  white-space : nowrap;
 }
 
 .icon {
-  display: inline-block;
+
+  display : inline-block;
+
 }
 
 .hide {
-  display: none;
+
+  display : none;
+
 }
+
 
