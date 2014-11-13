@@ -1,34 +1,58 @@
+//
+// Express 4.0 starter application
+// http://scotch.io/bar-talk/expressjs-4-0-new-features-and-upgrading-from-3-0
+//
+// This starts a node webserver on either port 3000 or a number given
+// in the environments PORT variable.
+//
+// View templates are written in Jade
+// http://jade-lang.com/
+//
+// Routes are imported from server/routes.js
+//
+
 // Set up
 // ----------------------------------------------------------------------------
-var express = require('express'),
-  app       = express(),
-  server    = require('http').createServer(app),
-  io        = require('socket.io').listen(server),
-  port      = process.env.PORT || 3000;
+var express    = require('express'),
+  app          = express(),
+  morgan       = require('morgan'),
+  compression  = require('compression'),
+  errorHandler = require('errorhandler'),
+  server       = require('http').Server(app),
+  io           = require('socket.io').listen(server),
+  env          = process.env.NODE_ENV || 'development',
+  port         = process.env.PORT || 3000;
 
 // Configuration
 // ----------------------------------------------------------------------------
-app.configure(function() {
+app.set('views', __dirname + '/server/views/');
 
-  app.use('./static', express.static(__dirname + './static'));
-  app.use(express.static(__dirname));
-  app.set('views', __dirname + '/server/views/');
-  app.use('view engine', 'jade');
+var oneYear = 31557600000;
 
-  app.use(express.bodyParser({
-    keepExtensions: true,
-    limit: 4100000000,
-    uploadDir: __dirname + '/uploads'
-  }));
+app.use(express.static(__dirname + '/',       { maxAge: oneYear }));
+app.use(express.static(__dirname + '/static', { maxAge: oneYear }));
 
-  app.use(express.logger('dev'));
+//app.use(express.bodyParser({
+  //keepExtensions: true,
+  //limit: 4100000000,
+  //uploadDir: __dirname + '/uploads'
+//}));
 
-});
+if (env === 'development') {
+
+  app.use(morgan('dev'));
+  app.use(errorHandler({ dumpExceptions: true, showStack: true }));
+
+} else {
+
+  app.use(morgan());
+  app.use(errorHandler());
+
+}
 
 // Routes
 // ----------------------------------------------------------------------------
 require('./server/route')(app, io);
-
 
 // Launch
 // ----------------------------------------------------------------------------
