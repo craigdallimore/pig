@@ -1,8 +1,9 @@
 var fs = require('fs'),
-  _    = require('lodash'),
+    ss = require('socket.io-stream'),
+    _  = require('lodash'),
 
-  library = process.env.NODE_ENV === 'development' ?
-    '/media/decoy/SDCARD/media/' :
+    library = process.env.NODE_ENV === 'development' ?
+    '/home/decoy/dev-local/pig/library/' :
     '/home/pi/ext/';
 
 // Get directory list
@@ -10,7 +11,9 @@ var fs = require('fs'),
 
 function getDirList(type, callback) {
 
-  fs.readdir(library + type + '/', function(err, files) {
+  var dir = library + type + '/';
+
+  fs.readdir(dir, function(err, files) {
     if (err) throw err;
 
     callback(_.map(files, function(name) {

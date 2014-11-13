@@ -32,12 +32,6 @@ var oneYear = 31557600000;
 app.use(express.static(__dirname + '/',       { maxAge: oneYear }));
 app.use(express.static(__dirname + '/static', { maxAge: oneYear }));
 
-//app.use(express.bodyParser({
-  //keepExtensions: true,
-  //limit: 4100000000,
-  //uploadDir: __dirname + '/uploads'
-//}));
-
 if (env === 'development') {
 
   app.use(morgan('dev'));

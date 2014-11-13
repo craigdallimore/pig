@@ -13,9 +13,15 @@
     "compression": "^1.2.0",
     "errorhandler": "^1.2.2",
     "express": "4.x",
+    "gulp-browserify": "^0.5.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-util": "^3.0.1",
     "jade": "*",
     "lodash": "~2.4.1",
     "morgan": "^1.5.0",
-    "socket.io": "~1.2.0"
+    "react": "^0.12.0",
+    "socket.io": "~1.2.0",
+    "socket.io-client": "^1.2.0",
+    "socket.io-stream": "^0.6.0"
   }
 }

@@ -9,11 +9,24 @@
 #
 # To run:
 # -------
-# $ gulp --require coffee-script
+# $ gulp
 
-gulp   = require 'gulp'
-sass   = require 'gulp-sass'
-rename = require 'gulp-rename'
+gulp       = require 'gulp'
+sass       = require 'gulp-sass'
+gutil      = require 'gulp-util'
+browserify = require 'gulp-browserify'
+rename     = require 'gulp-rename'
+
+# Tasks relating to JS
+gulp.task 'js', ->
+
+  gulp.src './static/js/main.js'
+  .pipe browserify
+    debug : true
+
+  .on 'error', gutil.log
+  .pipe rename 'app.min.js'
+  .pipe gulp.dest './static/dist/'
 
 # Tasks relating to CSS
 gulp.task 'css', ->
@@ -33,9 +46,10 @@ gulp.task 'css', ->
 # Watch task
 gulp.task 'watch', ->
 
-  gulp.watch [ './static/scss/**/*.scss' ], [ 'css' ]
+  gulp.watch [ 'static/scss/**/*.scss' ], [ 'css' ]
+  gulp.watch [ 'static/js/**/*.js' ], [ 'js' ]
 
 # Default task
-gulp.task 'default', [ 'css', 'watch' ]
+gulp.task 'default', [ 'js', 'css', 'watch' ]
 
 
