@@ -1,6 +1,7 @@
 var fs = require('fs'),
     ss = require('socket.io-stream'),
     _  = require('lodash'),
+    path = require('path'),
 
     library = process.env.NODE_ENV === 'development' ?
     '/home/decoy/dev-local/pig/library/' :
@@ -37,8 +38,6 @@ function inform(type, socket) {
 
 }
 
-// Routes
-
 module.exports = function(app, io) {
 
   io.sockets.on('connection', function(socket) {
@@ -47,45 +46,37 @@ module.exports = function(app, io) {
     inform('image', socket);
     inform('audio', socket);
 
-    app.on('file:saved', function(file) {
+    // File uploads are streamed. Once the stream completes, an event is
+    // emitted to inform the client that the new file has been saved.
+    // ------------------------------------------------------------------------
+    ss(socket).on('file:upload', function(stream, data) {
 
-      socket.emit('file:saved', file);
+      var name = path.basename(data.name);
+      var type = data.type;
+
+      stream.pipe(fs.createWriteStream(library + type + '/' + name));
+
+      stream.on('end', function() {
+
+        socket.emit('file:saved', {
+          name: name,
+          type: type,
+          path: '/files/' + type + '/' + name
+        });
+
+      });
 
     });
 
   });
-
-  function saveFile (name, file) {
-
-    var type     = file.headers['content-type'].split('/')[0],
-        destPath = library + type + '/' + name,
-        is       = fs.createReadStream(file.path),
-        os       = fs.createWriteStream(destPath);
-
-    is.on('end', function() {
-
-      app.emit('file:saved', {
-        name: name,
-        type: type,
-        path: '/files/' + type + '/' + name
-      });
-
-      fs.unlinkSync(file.path);
-    });
-
-    is.pipe(os);
-
-  }
 
   // Routes
   // --------------------------------------------------------------------------
 
   app.get('/',                  getIndex);
   app.get('/files/:type/:name', getFile);
-  app.post('/uploads',          onUploadStart, onUploadComplete);
 
   app.post('/api/item/:type/:name',   postNameChange);
-  app.get('/api/item/:type',          getPath);
   app.delete('/api/item/:type/:name', removeItem);
 
   function getIndex(req, res) {
@@ -103,34 +94,8 @@ module.exports = function(app, io) {
 
   }
 
-  function onUploadStart(req, res, next) {
-
-    for (var fileName in req.files) {
-      saveFile(fileName, req.files[fileName]);
-    }
-
-    next();
-
-  }
-
-  function onUploadComplete(req, res) {
-
-    res.send({ received: true });
-
-  }
-
   // API methods
   // --------------------------------------------------------------------------
-
-  function getPath(req, res) {
-
-    var itemType = req.params.type;
-
-    getDirList(itemType + '/', function(list) {
-      res.send(list);
-    });
-
-  }
 
   function postNameChange(req, res) {
 
