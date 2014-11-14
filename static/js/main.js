@@ -7,7 +7,8 @@
 //[/] Appraise gulpfile
 //[/] Remove backbone etc
 //[/] Add browserify
-//[!] Add flux / react
+//[/] Use es6ify!
+//[!] Add flux / react (use delorean)
 //[/] Get socketio working again
 //[x] Get file uploads working
 //[x] Implement file rename
@@ -17,14 +18,14 @@
 //// LIBS /////////////////////////////////////////////////////////////////////
 
 // React
-var React = require('react');
+const React = require('react');
 
 //// SCENE ////////////////////////////////////////////////////////////////////
 
-var MediaLists = require('./components/media-lists');
-var Uploader   = require('./components/uploader');
+let MediaLists = require('./components/media-lists');
+let Uploader   = require('./components/uploader');
 
-var mediaLists = MediaLists({
+let mediaLists = MediaLists({
   types : {
     video: { key : 'video-list' , name : 'Videos' , listEvent : 'list:video', children : [] },
     image: { key : 'image-list' , name : 'Images' , listEvent : 'list:image', children : [] },
@@ -32,10 +33,10 @@ var mediaLists = MediaLists({
   }
 });
 
-var uploader = Uploader();
+let uploader = Uploader();
 
-var mountEl = document.getElementById('mount');
-var formEl  = document.getElementById('upload');
+let mountEl = document.getElementById('mount');
+let formEl  = document.getElementById('upload');
 
 React.render(mediaLists, mountEl);
 React.render(uploader, formEl);

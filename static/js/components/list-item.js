@@ -6,21 +6,45 @@
 
 //// LIBS /////////////////////////////////////////////////////////////////////
 
-var React = require('react');
-var DOM   = React.DOM;
+const React = require('react');
+const DOM   = React.DOM;
+
+//// FLUX /////////////////////////////////////////////////////////////////////
+
+let actions = require('../actions/actions');
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
+console.log(actions);
 
-var listItem = React.createClass({
+let ListItem = React.createClass({
 
-  render : function render() {
+  _onDelete() {
+
+    // action ->
+    // dispatcher ->
+    // store ->
+    // ???
+    console.log('onDelete');
+    actions.setData({ herp: 'derp' });
+
+  },
+
+  render() {
 
     var href = this.props.path;
     var name = this.props.name;
 
     return DOM.li(null,
-      DOM.button({ className : 'btn-remove' }, 'x'),
+
+      DOM.button({
+
+        className : 'btn-remove',
+        onClick   : this._onDelete
+
+      }, 'x'),
+
       DOM.a({ href : href }, name)
+
     );
 
   }
@@ -29,6 +53,6 @@ var listItem = React.createClass({
 
 //// EXPORTS //////////////////////////////////////////////////////////////////
 
-module.exports = React.createFactory(listItem);
+module.exports = React.createFactory(ListItem);
 
-
+///////////////////////////////////////////////////////////////////////////////

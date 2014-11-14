@@ -5,15 +5,16 @@
   "private": true,
   "devDependencies": {
     "coffee-script": "~1.8.0",
+    "es6ify": "^1.5.1",
     "gulp": "~3.8.10",
-    "gulp-sass": "~1.1.0",
-    "gulp-rename": "~1.2.0"
+    "gulp-rename": "~1.2.0",
+    "gulp-sass": "~1.1.0"
   },
   "dependencies": {
     "compression": "^1.2.0",
+    "delorean": "^0.8.6",
     "errorhandler": "^1.2.2",
     "express": "4.x",
-    "gulp-browserify": "^0.5.0",
     "gulp-rename": "^1.2.0",
     "gulp-util": "^3.0.1",
     "jade": "*",

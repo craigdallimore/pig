@@ -8,15 +8,17 @@
 
 //// LIBS /////////////////////////////////////////////////////////////////////
 
-var React  = require('react');
-var DOM    = React.DOM;
-var socket = require('../socket').socket;
+const React      = require('react');
+let   DOM        = React.DOM;
+let   { socket } = require('../socket');
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 
-var MediaList = require('./media-list');
+let MediaList = require('./media-list');
 
-var mediaLists = React.createClass({
+let store = require('../store/file-store');
+
+let mediaLists = React.createClass({
 
   _updateList : function updateList(type, list) {
     type.children = list;

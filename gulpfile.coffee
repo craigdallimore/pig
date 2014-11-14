@@ -14,18 +14,21 @@
 gulp       = require 'gulp'
 sass       = require 'gulp-sass'
 gutil      = require 'gulp-util'
-browserify = require 'gulp-browserify'
+browserify = require 'browserify'
+es6ify     = require 'es6ify'
+source     = require 'vinyl-source-stream'
 rename     = require 'gulp-rename'
 
 # Tasks relating to JS
 gulp.task 'js', ->
 
-  gulp.src './static/js/main.js'
-  .pipe browserify
+  browserify
     debug : true
-
-  .on 'error', gutil.log
-  .pipe rename 'app.min.js'
+  , gutil.log
+  .transform es6ify
+  .add './static/js/main.js'
+  .bundle()
+  .pipe source 'app.min.js'
   .pipe gulp.dest './static/dist/'
 
 # Tasks relating to CSS
