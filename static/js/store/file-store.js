@@ -6,8 +6,9 @@
 
 //// LIBS /////////////////////////////////////////////////////////////////////
 
-const { Flux }   = require('delorean');
-let   { socket } = require('../socket');
+const { Flux }            = require('delorean');
+const socket              = require('../socket');
+let   { find, findIndex, remove } = require('ramda');
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -15,7 +16,8 @@ let Store = Flux.createStore({
 
   actions : {
 
-    'removeItem' : 'removeItem'
+    'removeItem'     : 'removeItem',
+    'progressUpload' : 'progressUpload'
 
   },
 
@@ -40,6 +42,7 @@ let Store = Flux.createStore({
     socket.on('list:video', (items) => this.updateMediaList(items, 'video'));
     socket.on('list:image', (items) => this.updateMediaList(items, 'image'));
     socket.on('list:audio', (items) => this.updateMediaList(items, 'audio'));
+    socket.on('file:saved', this.completeUpload.bind(this));
 
   },
 
@@ -50,25 +53,40 @@ let Store = Flux.createStore({
 
   },
 
-  removeItem(payload) {
+  progressUpload(item) {
 
-    console.log('store:remove', payload);
+    let { name, type } = item;
+    let collection     = this.types[type];
+    let existing       = find(x => x.name === item.name, collection);
 
-    let xhr = new XMLHttpRequest();
-
-    xhr.onreadystatechange = (e) => {
-      let { readyState } = xhr;
-      if ( readyState !== 4 ) { return; }
-      if ( xhr.status !== 200 ) { console.log('error deleting'); }
-      console.log('deleted');
-    };
-
-    xhr.open('DELETE', '/api/item/' + payload.type + '/' + payload.name);
-    xhr.send();
-
-    var type = payload.type;
+    if (!existing) {
+      existing = item;
+      collection.push(existing);
+    }
 
     this.emit('change');
+
+  },
+
+  completeUpload(item) {
+
+    let { name, type } = item;
+    let collection     = this.types[type];
+    let index          = findIndex(x => x.name === item.name, collection);
+
+    collection[index] = item;
+
+    this.emit('change');
+
+  },
+
+  removeItem(payload) {
+
+    let { name, type } = payload;
+    let collection     = this.types[type];
+    let index          = findIndex(x => x.name === name, collection);
+
+    this.updateMediaList(remove(index, 1, collection), type);
 
   },
 

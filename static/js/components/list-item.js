@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////
 //
 // List Item
 //
@@ -31,10 +31,10 @@ let ListItem = React.createClass({
 
   render() {
 
-    var href = this.props.path;
-    var name = this.props.name;
+    let { href, name, percentage } = this.props;
 
-    return DOM.li(null,
+    // <li> Normal listing
+    let li = DOM.li(null,
 
       DOM.button({
 
@@ -46,6 +46,20 @@ let ListItem = React.createClass({
       DOM.a({ href : href }, name)
 
     );
+
+    // <li> Uploading listing
+    let uploadLi = DOM.li(null,
+
+      DOM.p(null, 'Uploading ' + name),
+
+      DOM.div({
+        className : 'progress',
+        style     : { width : percentage + '%' }
+      })
+
+    );
+
+    return percentage ? uploadLi : li;
 
   }
 

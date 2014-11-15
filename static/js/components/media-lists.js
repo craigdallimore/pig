@@ -11,7 +11,6 @@
 const { Flux }   = require('delorean');
 const React      = require('react');
 let   DOM        = React.DOM;
-let   { socket } = require('../socket');
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 

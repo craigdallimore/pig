@@ -6,49 +6,52 @@
 
 //// LIBS /////////////////////////////////////////////////////////////////////
 
-var React       = require('react');
-var DOM         = React.DOM;
-var uploadFiles = require('../socket').uploadFiles;
+const React = require('react');
+const DOM   = React.DOM;
+
+//// FLUX /////////////////////////////////////////////////////////////////////
+
+let { uploadFiles } = require('../actions/actions');
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 
-var uploader = React.createClass({
+let Uploader = React.createClass({
 
-  getInitialState : function getInitialState() {
+  getInitialState() {
 
     return { hover : false };
 
   },
 
-  _onDragEnter : function onDragEnter(e) {
+  _onDragEnter(e) {
 
     this.setState({ hover : true });
 
   },
 
-  _onDragOver : function onDragOver(e) {
+  _onDragOver(e) {
 
     e.preventDefault();
 
   },
 
-  _onDragLeave : function onDragLeave(e) {
+  _onDragLeave() {
 
     this.setState({ hover : false });
 
   },
 
-  _onDrop : function onDrop(e) {
+  _onDrop(e) {
 
     this.setState({ hover : false });
     this.fileSelectHandler(e);
 
   },
 
-  render : function render() {
+  render() {
 
-    var hoverClass = this.state.hover ? ' hover' : '';
-    var className  = 'drop-zone' + hoverClass;
+    let hoverClass = this.state.hover ? ' hover' : '';
+    let className  = 'drop-zone' + hoverClass;
 
     return DOM.div({
 
@@ -64,10 +67,10 @@ var uploader = React.createClass({
 
   },
 
-  fileSelectHandler : function fileSelectHandler(e) {
+  fileSelectHandler(e) {
 
-    var event = e.originalEvent ? e.originalEvent : e;
-    var files = event.target.files || event.dataTransfer.files;
+    let event = e.originalEvent ? e.originalEvent : e;
+    let files = event.target.files || event.dataTransfer.files;
 
     event.preventDefault();
 
@@ -81,7 +84,6 @@ var uploader = React.createClass({
 
 //// EXPORTS //////////////////////////////////////////////////////////////////
 
-module.exports = React.createFactory(uploader);
+module.exports = React.createFactory(Uploader);
 
-
-
+///////////////////////////////////////////////////////////////////////////////

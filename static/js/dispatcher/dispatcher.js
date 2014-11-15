@@ -17,6 +17,12 @@ let Dispatcher = Flux.createDispatcher({
 
   },
 
+  progressUpload(item) {
+
+    this.dispatch('progressUpload', item);
+
+  },
+
   getStores() {
 
     return {

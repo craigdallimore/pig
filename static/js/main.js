@@ -11,10 +11,11 @@
 //[/] Add flux / react (use delorean)
 //[/] Get socketio working again
 //[/] Get file lists working
-//[x] Get file uploads working
-//[x] Implement file delete
-//[x] File upload progress
+//[/] Get file uploads working
+//[/] Implement file delete
+//[/] File upload progress
 //[x] Implement file rename
+//[x] Implement delete confirm
 //[x] Implement folders
 
 //// LIBS /////////////////////////////////////////////////////////////////////
