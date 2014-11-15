@@ -6,25 +6,22 @@
 
 //// LIBS /////////////////////////////////////////////////////////////////////
 
-const { Flux } = require('delorean');
-const Store      = require('../store/file-store');
-
-let store = new Store();
-
-console.log(store);
+const { Flux }  = require('delorean');
+var   fileStore = require('../store/file-store');
 
 let Dispatcher = Flux.createDispatcher({
 
-  setData(data) {
+  removeItem(payload) {
 
-    console.log('dispatcher: setdata', data);
-    this.dispatch('incoming-data', data);
+    this.dispatch('removeItem', payload);
 
   },
 
   getStores() {
 
-    return { increment : store };
+    return {
+      fileStore : fileStore
+    };
 
   }
 

@@ -6,26 +6,26 @@
 
 //// LIBS /////////////////////////////////////////////////////////////////////
 
-const React = require('react');
-const DOM   = React.DOM;
+const { Flux } = require('delorean');
+const React    = require('react');
+const DOM      = React.DOM;
 
 //// FLUX /////////////////////////////////////////////////////////////////////
 
 let actions = require('../actions/actions');
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
-console.log(actions);
 
 let ListItem = React.createClass({
 
+  mixins : [ Flux.mixins.storeListener ],
+
   _onDelete() {
 
-    // action ->
-    // dispatcher ->
-    // store ->
-    // ???
-    console.log('onDelete');
-    actions.setData({ herp: 'derp' });
+    actions.removeItem({
+      type : this.props.type,
+      name : this.props.name
+    });
 
   },
 

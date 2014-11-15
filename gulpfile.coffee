@@ -19,17 +19,24 @@ es6ify     = require 'es6ify'
 source     = require 'vinyl-source-stream'
 rename     = require 'gulp-rename'
 
+# Handle browserify errors.
+handleError = (err) ->
+  gutil.log err.message
+  this.emit 'end'
+
 # Tasks relating to JS
 gulp.task 'js', ->
 
-  browserify
-    debug : true
-  , gutil.log
-  .transform es6ify
-  .add './static/js/main.js'
-  .bundle()
-  .pipe source 'app.min.js'
-  .pipe gulp.dest './static/dist/'
+  b = browserify
+        debug : true
+
+  b.transform es6ify
+    .add './static/js/main.js'
+
+  b.bundle()
+    .on 'error', handleError
+    .pipe source 'app.min.js'
+    .pipe gulp.dest './static/dist/'
 
 # Tasks relating to CSS
 gulp.task 'css', ->

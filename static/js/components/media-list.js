@@ -6,28 +6,24 @@
 
 //// LIBS /////////////////////////////////////////////////////////////////////
 
-var React  = require('react');
-var DOM    = React.DOM;
+const { Flux }  = require('delorean');
+const React     = require('react');
+const DOM       = React.DOM;
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 
-var ListItem = require('./list-item');
+let ListItem = require('./list-item');
 
-var mediaList = React.createClass({
+let MediaList = React.createClass({
+
+  mixins : [ Flux.mixins.storeListener ],
 
   render : function render() {
 
-    var id       = this.props.key;
-    var name     = this.props.name;
-    var children = [];
-
-    if (this.props.children && this.props.children.length) {
-
-      children = this.props.children.map(function(child) {
-       return ListItem(child);
-      });
-
-    }
+    let { types }      = this.getStore('fileStore');
+    let { type, name } = this.props;
+    let id             = this.props.key;
+    let children       = types[type];
 
     return DOM.li({
       className : 'media-list',
@@ -35,7 +31,7 @@ var mediaList = React.createClass({
       key       : id
     },
       DOM.h2(null, name),
-      DOM.ul(null, children)
+      DOM.ul(null, children.map(ListItem))
     );
 
   }
@@ -44,6 +40,6 @@ var mediaList = React.createClass({
 
 //// EXPORTS //////////////////////////////////////////////////////////////////
 
-module.exports = React.createFactory(mediaList);
+module.exports = React.createFactory(MediaList);
 
 ///////////////////////////////////////////////////////////////////////////////

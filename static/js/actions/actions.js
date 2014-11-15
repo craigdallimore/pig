@@ -8,12 +8,10 @@
 
 let Dispatcher = require('../dispatcher/dispatcher');
 
-console.log(Dispatcher);
 let Actions = {
 
-  setData(data) {
-    console.log('actions:setdata', data);
-    Dispatcher.setData(data);
+  removeItem(item) {
+    Dispatcher.removeItem(item);
   }
 
 };

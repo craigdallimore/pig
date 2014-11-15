@@ -2,44 +2,89 @@
 //
 // File store
 //
-// Stores call `.register` on the AppDispatcher, and pass a callback
-// which takes a payload. The payload is inspected, and depending on
-// the ACTION it contains the store will update in one of various ways
-// before emitting a change event.
-//
 ///////////////////////////////////////////////////////////////////////////////
 
 //// LIBS /////////////////////////////////////////////////////////////////////
 
-const { Flux } = require('delorean');
+const { Flux }   = require('delorean');
+let   { socket } = require('../socket');
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// Actions
-// - setList
-// - create
-// - updateProgress
-
 let Store = Flux.createStore({
 
-  data : null,
+  actions : {
 
-  setData(data) {
+    'removeItem' : 'removeItem'
 
-    console.log('store:setData', data);
-    this.data = data;
+  },
+
+  types : {
+
+    video : [],
+    image : [],
+    audio : []
+
+  },
+
+  lists : {
+
+    video: { key : 'video-list' , name : 'Videos' , type : 'video' },
+    image: { key : 'image-list' , name : 'Images' , type : 'image' },
+    audio: { key : 'audio-list' , name : 'Audio'  , type : 'audio' }
+
+  },
+
+  initialize() {
+
+    socket.on('list:video', (items) => this.updateMediaList(items, 'video'));
+    socket.on('list:image', (items) => this.updateMediaList(items, 'image'));
+    socket.on('list:audio', (items) => this.updateMediaList(items, 'audio'));
+
+  },
+
+  updateMediaList(items, type) {
+
+    this.types[type] = items;
     this.emit('change');
 
   },
 
-  actions : {
-    'incoming-data' : 'setData'
+  removeItem(payload) {
+
+    console.log('store:remove', payload);
+
+    let xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = (e) => {
+      let { readyState } = xhr;
+      if ( readyState !== 4 ) { return; }
+      if ( xhr.status !== 200 ) { console.log('error deleting'); }
+      console.log('deleted');
+    };
+
+    xhr.open('DELETE', '/api/item/' + payload.type + '/' + payload.name);
+    xhr.send();
+
+    var type = payload.type;
+
+    this.emit('change');
+
+  },
+
+  getState() {
+
+    return {
+      lists : this.lists,
+      types : this.types
+    };
+
   }
 
 });
 
 //// EXPORTS //////////////////////////////////////////////////////////////////
 
-module.exports = Store;
+module.exports = new Store();
 
 ///////////////////////////////////////////////////////////////////////////////

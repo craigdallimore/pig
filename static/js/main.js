@@ -8,11 +8,13 @@
 //[/] Remove backbone etc
 //[/] Add browserify
 //[/] Use es6ify!
-//[!] Add flux / react (use delorean)
+//[/] Add flux / react (use delorean)
 //[/] Get socketio working again
+//[/] Get file lists working
 //[x] Get file uploads working
-//[x] Implement file rename
 //[x] Implement file delete
+//[x] File upload progress
+//[x] Implement file rename
 //[x] Implement folders
 
 //// LIBS /////////////////////////////////////////////////////////////////////
@@ -24,19 +26,16 @@ const React = require('react');
 
 let MediaLists = require('./components/media-lists');
 let Uploader   = require('./components/uploader');
+let dispatcher = require('./dispatcher/dispatcher');
 
-let mediaLists = MediaLists({
-  types : {
-    video: { key : 'video-list' , name : 'Videos' , listEvent : 'list:video', children : [] },
-    image: { key : 'image-list' , name : 'Images' , listEvent : 'list:image', children : [] },
-    audio: { key : 'audio-list' , name : 'Audio'  , listEvent : 'list:audio', children : [] }
-  }
-});
+let mediaLists = MediaLists({ dispatcher : dispatcher });
 
-let uploader = Uploader();
+let uploader   = Uploader();
 
-let mountEl = document.getElementById('mount');
-let formEl  = document.getElementById('upload');
+let mountEl    = document.getElementById('mount');
+let formEl     = document.getElementById('upload');
 
 React.render(mediaLists, mountEl);
 React.render(uploader, formEl);
+
+///////////////////////////////////////////////////////////////////////////////
