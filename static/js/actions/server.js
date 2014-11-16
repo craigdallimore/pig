@@ -11,7 +11,7 @@
 
 let socket             = require('../socket');
 let ss                 = require('socket.io-stream');
-let { progressUpload } = require('./actions');
+let { progressUpload } = require('./client');
 
 //// HELPER ///////////////////////////////////////////////////////////////////
 

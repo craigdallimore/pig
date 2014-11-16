@@ -54,7 +54,7 @@ let ListItem = React.createClass({
 
   render() {
 
-    let { href, name, percentage } = this.props;
+    let { path, name, percentage } = this.props;
 
     let nameEl = this.state.isRenaming ?
 
@@ -86,7 +86,7 @@ let ListItem = React.createClass({
 
       DOM.a({
         className : 'link',
-        href      : href
+        href      : path
       }, '▾ Download'),
 
       nameEl
