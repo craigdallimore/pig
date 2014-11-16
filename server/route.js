@@ -2,22 +2,25 @@ var fs = require('fs'),
     ss = require('socket.io-stream'),
     _  = require('lodash'),
     path = require('path'),
+    Promise = require('bluebird'),
 
     library = process.env.NODE_ENV === 'development' ?
     '/home/decoy/dev-local/pig/library/' :
     '/home/pi/ext/';
 
+// Use bluebird to upgrade fs to a promise library
+Promise.promisifyAll(fs);
+
 // Get directory list
 // ----------------------------------------------------------------------------
 
-function getDirList(type, callback) {
+function emitList(type, socket) {
 
   var dir = library + type + '/';
 
-  fs.readdir(dir, function(err, files) {
-    if (err) throw err;
+  fs.readdirAsync(dir).then(function(files) {
 
-    callback(_.map(files, function(name) {
+    var fileList = files.map(function(name) {
 
       return {
         name: name,
@@ -25,16 +28,11 @@ function getDirList(type, callback) {
         path: '/files/' + type + '/' + name
       };
 
-    }));
+    });
+
+    socket.emit('list:' + type, fileList);
 
   });
-}
-
-function inform(type, socket) {
-
-    getDirList(type, function(list) {
-      socket.emit('list:' + type, list);
-    });
 
 }
 
@@ -42,9 +40,9 @@ module.exports = function(app, io) {
 
   io.sockets.on('connection', function(socket) {
 
-    inform('video', socket);
-    inform('image', socket);
-    inform('audio', socket);
+    emitList('video', socket);
+    emitList('image', socket);
+    emitList('audio', socket);
 
     // File uploads are streamed. Once the stream completes, an event is
     // emitted to inform the client that the new file has been saved.
@@ -68,17 +66,41 @@ module.exports = function(app, io) {
 
     });
 
+    // File renaming
+    // ------------------------------------------------------------------------
+    socket.on('rename', function(item, newName) {
+
+      var oldPath = library + item.type + '/' + item.name,
+        newPath   = library + item.type + '/' + newName;
+
+      fs.renameAsync(oldPath, newPath).then(function() {
+        console.log('Renamed ' + item.name + ' to ' + newName);
+        socket.emit('renamed', item, newName);
+      }, function() {
+        console.log('Error renaming ' + item.name + ' to ' + newName);
+      });
+
+    });
+
+    // File deleting
+    // ------------------------------------------------------------------------
+    socket.on('remove', function(item) {
+
+      var path = library + item.type + '/' + item.name;
+
+      fs.unlinkAsync(path).then(function() {
+        console.log('deleted', item);
+        socket.emit('deleted', item);
+      }, function() {
+        console.log('Error deleting ' + item.name);
+      });
+
+    });
+
   });
 
   // Routes
   // --------------------------------------------------------------------------
-
-  app.get('/',                  getIndex);
-  app.get('/files/:type/:name', getFile);
-
-  app.post('/api/item/:type/:name',   postNameChange);
-  app.delete('/api/item/:type/:name', removeItem);
-
   function getIndex(req, res) {
 
     res.render('index.jade', {
@@ -94,36 +116,7 @@ module.exports = function(app, io) {
 
   }
 
-  // API methods
-  // --------------------------------------------------------------------------
-
-  function postNameChange(req, res) {
-
-    var itemType = req.params.type,
-      oldName    = library + itemType + '/' + req.body.name,
-      newName    = library + itemType + '/' + req.body.newName;
-
-    fs.rename(oldName, newName, function(err) {
-      if (err) return res.json({ renamed: false });
-
-      res.json({ renamed: true });
-
-    });
-
-  }
-
-  function removeItem(req, res) {
-
-    var itemType = req.params.type,
-      name       = req.params.name,
-      path       = library + itemType + '/' + name;
-
-    fs.unlink(path, function(err) {
-      if (err) return res.json({ deleted: false, error: 'File not found' });
-      res.json({ deleted: true });
-    });
-
-
-  }
+  app.get('/',                  getIndex);
+  app.get('/files/:type/:name', getFile);
 
 };

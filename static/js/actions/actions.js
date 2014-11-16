@@ -2,49 +2,29 @@
 //
 // Actions
 //
+// Client actions go to the dispatcher.
+// Client actions can come from the server or from the view.
+//
 ///////////////////////////////////////////////////////////////////////////////
 
-// Socketio
-let io     = require('socket.io-client');
-let ss     = require('socket.io-stream');
-let socket = require('../socket');
+//// IMPORTS //////////////////////////////////////////////////////////////////
 
-//// LIBS /////////////////////////////////////////////////////////////////////
-
+let socket     = require('../socket');
 let Dispatcher = require('../dispatcher/dispatcher');
 
 //// ACTIONS //////////////////////////////////////////////////////////////////
 
 let Actions = {
 
-  removeItem(item) {
+  renameItem(item, newName) {
 
-    let { name, type } = item;
-    let xhr            = new XMLHttpRequest();
-
-    xhr.onreadystatechange = (e) => {
-
-      let { readyState } = xhr;
-
-      if ( readyState !== 4 ) return;
-
-      if ( xhr.status !== 200 ) {
-        throw('error deleting ' + name);
-      }
-
-      // It worked
-      Dispatcher.removeItem(item);
-
-    };
-
-    xhr.open('DELETE', '/api/item/' + type + '/' + name);
-    xhr.send();
+    Dispatcher.renameItem(item, newName);
 
   },
 
-  uploadFiles(FileList) {
+  removeItem(item) {
 
-    Array.prototype.forEach.call(FileList, streamFile);
+    Dispatcher.removeItem(item);
 
   },
 
@@ -56,39 +36,14 @@ let Actions = {
 
 };
 
-let streamFile = (file) => {
+///////////////////////////////////////////////////////////////////////////////
 
-  let stream = ss.createStream();
-  let item   = {
-    name : file.name,
-    size : file.size,
-    type : file.type.split('/')[0]
-  }
+// Re-entry point for actions that extend the flux loop to the server.
 
-  // Inform the server that a stream is coming.
-  ss(socket).emit('file:upload', stream, item);
+socket.on('renamed', Actions.renameItem);
+socket.on('deleted', Actions.removeItem);
 
-  let blobReadStream = ss.createBlobReadStream(file);
-  let size = 0;
-
-  // Inform the store of the percentage uploaded.
-  blobReadStream.on('data', (chunk) => {
-
-    size += chunk.length;
-
-    item.percentage = Math.floor(size / file.size * 100);
-
-    // Create an action for each uploaded chuck so
-    // the store can reflect progress.
-    Actions.progressUpload(item);
-
-  });
-
-  blobReadStream.pipe(stream);
-
-};
-
-///// EXPORTS /////////////////////////////////////////////////////////////////
+//// EXPORTS //////////////////////////////////////////////////////////////////
 
 module.exports = Actions;
 

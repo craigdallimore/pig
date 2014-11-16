@@ -12,7 +12,7 @@ const DOM      = React.DOM;
 
 //// FLUX /////////////////////////////////////////////////////////////////////
 
-let actions = require('../actions/actions');
+let { removeItem, renameItem } = require('../actions/server');
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 
@@ -20,9 +20,32 @@ let ListItem = React.createClass({
 
   mixins : [ Flux.mixins.storeListener ],
 
+  getInitialState() {
+
+    return {
+      isRenaming : false
+    };
+
+  },
+
+  _onClick() {
+
+    this.setState({ isRenaming : true });
+
+  },
+
+  _onBlur(e) {
+
+    console.log('onBlur', e.target.value);
+    this.setState({ isRenaming : false });
+
+    renameItem(this.props, e.target.value);
+
+  },
+
   _onDelete() {
 
-    actions.removeItem({
+    removeItem({
       type : this.props.type,
       name : this.props.name
     });
@@ -33,8 +56,26 @@ let ListItem = React.createClass({
 
     let { href, name, percentage } = this.props;
 
+    let nameEl = this.state.isRenaming ?
+
+      // <input>
+      DOM.input({
+        ref          : 'nameInput',
+        type         : 'text',
+        defaultValue : name,
+        onBlur       : this._onBlur
+      })
+
+      : // or
+
+      // <p>
+      DOM.p({
+        className : 'name',
+        onClick   : this._onClick
+      }, name);
+
     // <li> Normal listing
-    let li = DOM.li(null,
+    let normalLi = DOM.li(null,
 
       DOM.button({
 
@@ -43,7 +84,12 @@ let ListItem = React.createClass({
 
       }, 'x'),
 
-      DOM.a({ href : href }, name)
+      DOM.a({
+        className : 'link',
+        href      : href
+      }, '▾ Download'),
+
+      nameEl
 
     );
 
@@ -59,7 +105,7 @@ let ListItem = React.createClass({
 
     );
 
-    return percentage ? uploadLi : li;
+    return percentage ? uploadLi : normalLi;
 
   }
 

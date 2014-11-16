@@ -11,6 +11,7 @@
     "gulp-sass": "~1.1.0"
   },
   "dependencies": {
+    "bluebird": "^2.3.11",
     "compression": "^1.2.0",
     "delorean": "^0.8.6",
     "errorhandler": "^1.2.2",

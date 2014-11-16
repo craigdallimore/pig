@@ -11,7 +11,7 @@ const DOM   = React.DOM;
 
 //// FLUX /////////////////////////////////////////////////////////////////////
 
-let { uploadFiles } = require('../actions/actions');
+let { uploadFiles } = require('../actions/server');
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 
@@ -23,7 +23,7 @@ let Uploader = React.createClass({
 
   },
 
-  _onDragEnter(e) {
+  _onDragEnter() {
 
     this.setState({ hover : true });
 

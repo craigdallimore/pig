@@ -10,14 +10,25 @@ const { Flux }            = require('delorean');
 const socket              = require('../socket');
 let   { find, findIndex, remove } = require('ramda');
 
-///////////////////////////////////////////////////////////////////////////////
+//// HELPER ///////////////////////////////////////////////////////////////////
+
+let findItem = (item, collections) => {
+
+  let { name, type } = item;
+  let collection     = collections[type];
+
+  return find(x => x.name === name, collection);
+
+};
+
 
 let Store = Flux.createStore({
 
   actions : {
 
     'removeItem'     : 'removeItem',
-    'progressUpload' : 'progressUpload'
+    'progressUpload' : 'progressUpload',
+    'renameItem'     : 'renameItem'
 
   },
 
@@ -53,11 +64,21 @@ let Store = Flux.createStore({
 
   },
 
+  renameItem(payload) {
+
+    let { item, newName } = payload;
+    let existingItem      = findItem(item, this.types);
+    existingItem.name     = newName;
+
+    this.emit('change');
+
+  },
+
   progressUpload(item) {
 
-    let { name, type } = item;
-    let collection     = this.types[type];
-    let existing       = find(x => x.name === item.name, collection);
+    let { type }   = item;
+    let collection = this.types[type];
+    let existing   = findItem(item, this.types);
 
     if (!existing) {
       existing = item;
@@ -72,7 +93,7 @@ let Store = Flux.createStore({
 
     let { name, type } = item;
     let collection     = this.types[type];
-    let index          = findIndex(x => x.name === item.name, collection);
+    let index          = findIndex(x => x.name === name, collection);
 
     collection[index] = item;
 
