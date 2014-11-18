@@ -1,8 +1,0 @@
-this["App"] = this["App"] || {};
-this["App"]["Tmpl"] = this["App"]["Tmpl"] || {};
-
-this["App"]["Tmpl"]["static/templates/audio"] = function(obj) {obj || (obj = {});var __t, __p = '', __e = _.escape, __j = Array.prototype.join;function print() { __p += __j.call(arguments, '') }with (obj) { if( typeof path !== 'undefined' ) { ;__p += '\n  <button class="btn-remove">X</button>\n  <a href="' +((__t = ( path )) == null ? '' : __t) +'">' +((__t = ( name )) == null ? '' : __t) +'</a>\n'; } else { ;__p += '\n  <p>' +((__t = ( name )) == null ? '' : __t) +' uploading</p>\n  <div class="progress"></div>\n'; } ;__p += '\n\n';}return __p};
-
-this["App"]["Tmpl"]["static/templates/image"] = function(obj) {obj || (obj = {});var __t, __p = '', __e = _.escape, __j = Array.prototype.join;function print() { __p += __j.call(arguments, '') }with (obj) { if( typeof path !== 'undefined' ) { ;__p += '\n  <button class="btn-remove">X</button>\n  <img src="' +((__t = ( path )) == null ? '' : __t) +'" width="120" alt="' +((__t = ( name )) == null ? '' : __t) +'"/>\n'; } else { ;__p += '\n  <p>' +((__t = ( name )) == null ? '' : __t) +' uploading</p>\n  <div class="progress"></div>\n'; } ;__p += '\n';}return __p};
-
-this["App"]["Tmpl"]["static/templates/video"] = function(obj) {obj || (obj = {});var __t, __p = '', __e = _.escape, __j = Array.prototype.join;function print() { __p += __j.call(arguments, '') }with (obj) { if( typeof path !== 'undefined' ) { ;__p += '\n  <button class="btn-remove">X</button>\n  <a href="' +((__t = ( path )) == null ? '' : __t) +'">' +((__t = ( name )) == null ? '' : __t) +'</a>\n'; } else { ;__p += '\n  <p>' +((__t = ( name )) == null ? '' : __t) +' uploading</p>\n  <div class="progress"></div>\n'; } ;__p += '\n';}return __p};

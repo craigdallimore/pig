@@ -1,3 +1,5 @@
+###############################################################################
+#
 # gulpfile.coffee
 #
 # [About gulp](https://github.com/gulpjs/gulp/)
@@ -9,33 +11,83 @@
 #
 # To run:
 # -------
-# $ gulp --require coffee-script
+# $ gulp
+#
+#### IMPORTS ##################################################################
 
-gulp   = require 'gulp'
-sass   = require 'gulp-sass'
-rename = require 'gulp-rename'
+gulp       = require 'gulp'
+sass       = require 'gulp-sass'
+gutil      = require 'gulp-util'
+browserify = require 'browserify'
+reactify   = require 'reactify'             # Transform for .jsx
+es6ify     = require 'es6ify'               # Transform for es6 -> es5
+source     = require 'vinyl-source-stream'  # Bridge text stream -> gulp stream
+rename     = require 'gulp-rename'
 
-# Tasks relating to CSS
+#### HELPERS ##################################################################
+
+# Handle browserify errors.
+handleError = (err) ->
+  gutil.log err.message
+  this.emit 'end'
+
+#### FILES / FOLDERS  #########################################################
+
+jsEntryFile   = './static/js/main.js'
+jsPath        = './static/js/'
+jsBundle      = 'app.min.js'
+
+scssEntryFile = './static/scss/main.scss'
+scssPath      = './static/scss/'
+cssBundle     = 'app.css'
+
+destFolder    = './static/dist/'
+
+#### JS TASKS #################################################################
+#
+gulp.task 'js', ->
+
+  b = browserify jsEntryFile,
+        debug : true
+
+  b.transform reactify                  # Transform .jsx
+  b.transform es6ify.configure(/.jsx?/) # Apply to .js and .jsx files
+
+  b.bundle()
+    .on 'error', handleError
+    .pipe source jsBundle
+    .pipe gulp.dest destFolder
+
+#### CSS TASKS ################################################################
+
 gulp.task 'css', ->
 
-  gulp.src './static/scss/main.scss'
+  gulp.src scssEntryFile
 
     # note the sourcemap is appended to the output css
   .pipe sass
     sourceComments : 'map'
     outputStyle    : 'compressed'
-    includePaths   : [ 'static/scss/' ]
+    includePaths   : [ scssPath ]
 
-  .pipe rename 'app.css'
+  .pipe rename cssBundle
+  .pipe gulp.dest destFolder
 
-  .pipe gulp.dest './static/dist/'
+#### WATCH TASK ###############################################################
 
-# Watch task
 gulp.task 'watch', ->
 
-  gulp.watch [ './static/scss/**/*.scss' ], [ 'css' ]
+  gulp.watch [
+    scssPath + '**/*.scss'
+  ], [ 'css' ]
 
-# Default task
-gulp.task 'default', [ 'css', 'watch' ]
+  gulp.watch [
+    jsPath + '**/*.js'
+    jsPath + '**/*.jsx'
+  ], [ 'js' ]
 
+#### DEFAULT TASK #############################################################
 
+gulp.task 'default', [ 'js', 'css', 'watch' ]
+
+#### KAIZEN ###################################################################

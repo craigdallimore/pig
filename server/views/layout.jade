@@ -24,19 +24,13 @@ html.no-js(lang='en')
     //- CSS output from SASS / Grunt
     link(rel='stylesheet', href='/static/dist/app.css')
 
-    //- Provides some CSS3 selectors for IE 6,7,8
-    //if (gte IE 6)&(lte IE 8)
-      script(src='/static/js/libs/selectivizr-1.0.2.min.js')
-
-    script(src='/static/js/libs/modernizr-2.6.2.min.js')
-
   body
     noscript
       p This site works better with JavaScript enabled.
 
     block content
 
-    script(src='/static/js/libs/require.js', data-main='/static/js/config')
+    script(src='static/dist/app.min.js')
 
     script#tmpl-audio(type='text/template').
       <% if( typeof path !== 'undefined' ) { %>

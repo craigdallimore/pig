@@ -2,39 +2,30 @@ extends layout
 
 block title
 
-  title Pig@#{ title }
+  title Pig
 
 block content
 
-    form#upload(action="upload", method="post", enctype="multipart/data").uploader
+    div#upload
+      form(action="upload", method="post", enctype="multipart/data").uploader
 
-      fieldset
+        fieldset
 
-        input#max-file-size(type="hidden" name="max-file-size" value="100000")
+          input#max-file-size(type="hidden" name="max-file-size" value="100000")
 
-        label(for="file-select") Files to upload:
+          label(for="file-select") Files to upload:
 
-        input#file-select(type="file" name="file-select[]" multiple="multiple")
+          input#file-select(type="file" name="file-select[]" multiple="multiple")
 
-        #file-drag.drop-zone
-          p Drop files here
+          #file-drag.drop-zone
+            p Drop files here
 
-      fieldset
+        fieldset
 
-        input#filter(type='text', placeholder='filter')
+          input#filter(type='text', placeholder='filter')
 
-        button#btn-submit(type="submit") Upload
+          button#btn-submit(type="submit") Upload
 
-    ul.media-lists
+    #mount
 
-      li#video-list.media-list
-        h2 Videos
-        ul
-
-      li#image-list.media-list
-        h2 Images
-        ul
-
-      li#audio-list.media-list
-        h2 Audio
-        ul
+    #mask
