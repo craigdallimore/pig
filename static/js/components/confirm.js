@@ -6,30 +6,57 @@
 
 //// LIBS /////////////////////////////////////////////////////////////////////
 
-const React = require('react');
-const DOM   = React.DOM;
+const { Flux } = require('delorean');
+const React    = require('react/addons');
+const DOM      = React.DOM;
+const { CSSTransitionGroup } = React.addons;
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 
 let Confirm = React.createClass({
 
+  mixins : [ Flux.mixins.storeListener ],
+
+  getInitialState() {
+
+    return {
+
+      isHidden : true
+
+    };
+
+  },
+
+  _onCancelClick() {
+
+    this.state.isHidden = true;
+
+  },
+
   render : function render() {
 
-    return DOM.div({
-      className : 'horizon',
-    },
-      DOM.div({
-        className : 'dialog zoomout'
+    let { confirmRemoveMessage } = this.getStore('fileStore');
+    let className = 'dialog' + (confirmRemoveMessage ? '' : ' zoom-out');
+
+    console.log('rcsstg', CSSTransitionGroup);
+
+    return React.createElement(CSSTransitionGroup({
+      transitionName : 'zoom-out',
+      component      : 'div'
+      }, DOM.div({
+        className :  className,
+        key       : 'dialog'
       },
-        DOM.h3(null, message),
+        DOM.h3(null, confirmRemoveMessage || ''),
         DOM.button({
           className : 'btn-ok'
         }, 'OK'),
         DOM.button({
-          className : 'btn-cancel'
+          className : 'btn-cancel',
+          onClick   : this._onCancelClick
         }, 'Cancel')
       )
-    );
+    ));
 
   }
 
@@ -40,4 +67,3 @@ let Confirm = React.createClass({
 module.exports = React.createFactory(Confirm);
 
 ///////////////////////////////////////////////////////////////////////////////
-
