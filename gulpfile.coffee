@@ -1,3 +1,5 @@
+###############################################################################
+#
 # gulpfile.coffee
 #
 # [About gulp](https://github.com/gulpjs/gulp/)
@@ -10,56 +12,82 @@
 # To run:
 # -------
 # $ gulp
+#
+#### IMPORTS ##################################################################
 
 gulp       = require 'gulp'
 sass       = require 'gulp-sass'
 gutil      = require 'gulp-util'
 browserify = require 'browserify'
-es6ify     = require 'es6ify'
-source     = require 'vinyl-source-stream'
+reactify   = require 'reactify'             # Transform for .jsx
+es6ify     = require 'es6ify'               # Transform for es6 -> es5
+source     = require 'vinyl-source-stream'  # Bridge text stream -> gulp stream
 rename     = require 'gulp-rename'
+
+#### HELPERS ##################################################################
 
 # Handle browserify errors.
 handleError = (err) ->
   gutil.log err.message
   this.emit 'end'
 
-# Tasks relating to JS
+#### FILES / FOLDERS  #########################################################
+
+jsEntryFile   = './static/js/main.js'
+jsPath        = './static/js/'
+jsBundle      = 'app.min.js'
+
+scssEntryFile = './static/scss/main.scss'
+scssPath      = './static/scss/'
+cssBundle     = 'app.css'
+
+destFolder    = './static/dist/'
+
+#### JS TASKS #################################################################
+#
 gulp.task 'js', ->
 
-  b = browserify
+  b = browserify jsEntryFile,
         debug : true
 
-  b.transform es6ify
-    .add './static/js/main.js'
+  b.transform reactify                  # Transform .jsx
+  b.transform es6ify.configure(/.jsx?/) # Apply to .js and .jsx files
 
   b.bundle()
     .on 'error', handleError
-    .pipe source 'app.min.js'
-    .pipe gulp.dest './static/dist/'
+    .pipe source jsBundle
+    .pipe gulp.dest destFolder
 
-# Tasks relating to CSS
+#### CSS TASKS ################################################################
+
 gulp.task 'css', ->
 
-  gulp.src './static/scss/main.scss'
+  gulp.src scssEntryFile
 
     # note the sourcemap is appended to the output css
   .pipe sass
     sourceComments : 'map'
     outputStyle    : 'compressed'
-    includePaths   : [ 'static/scss/' ]
+    includePaths   : [ scssPath ]
 
-  .pipe rename 'app.css'
+  .pipe rename cssBundle
+  .pipe gulp.dest destFolder
 
-  .pipe gulp.dest './static/dist/'
+#### WATCH TASK ###############################################################
 
-# Watch task
 gulp.task 'watch', ->
 
-  gulp.watch [ 'static/scss/**/*.scss' ], [ 'css' ]
-  gulp.watch [ 'static/js/**/*.js' ], [ 'js' ]
+  gulp.watch [
+    scssPath + '**/*.scss'
+  ], [ 'css' ]
 
-# Default task
+  gulp.watch [
+    jsPath + '**/*.js'
+    jsPath + '**/*.jsx'
+  ], [ 'js' ]
+
+#### DEFAULT TASK #############################################################
+
 gulp.task 'default', [ 'js', 'css', 'watch' ]
 
-
+#### KAIZEN ###################################################################

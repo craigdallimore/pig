@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "bluebird": "^2.3.11",
+    "browserify": "^6.3.2",
     "compression": "^1.2.0",
     "delorean": "^0.8.6",
     "errorhandler": "^1.2.2",
@@ -23,8 +24,10 @@
     "morgan": "^1.5.0",
     "ramda": "^0.7.2",
     "react": "^0.12.0",
+    "reactify": "^0.16.0",
     "socket.io": "~1.2.0",
     "socket.io-client": "^1.2.0",
-    "socket.io-stream": "^0.6.0"
+    "socket.io-stream": "^0.6.0",
+    "vinyl-source-stream": "^1.0.0"
   }
 }
