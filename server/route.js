@@ -68,14 +68,14 @@ module.exports = function(app, io) {
 
     // File renaming
     // ------------------------------------------------------------------------
-    socket.on('rename', function(item, newName) {
+    socket.on('file:rename', function(item, newName) {
 
       var oldPath = library + item.type + '/' + item.name,
         newPath   = library + item.type + '/' + newName;
 
       fs.renameAsync(oldPath, newPath).then(function() {
         console.log('Renamed ' + item.name + ' to ' + newName);
-        socket.emit('renamed', item, newName);
+        socket.emit('file:renamed', item, newName);
       }, function() {
         console.log('Error renaming ' + item.name + ' to ' + newName);
       });
@@ -84,13 +84,13 @@ module.exports = function(app, io) {
 
     // File deleting
     // ------------------------------------------------------------------------
-    socket.on('remove', function(item) {
+    socket.on('file:remove', function(item) {
 
       var path = library + item.type + '/' + item.name;
 
       fs.unlinkAsync(path).then(function() {
         console.log('deleted', item);
-        socket.emit('deleted', item);
+        socket.emit('file:removed', item);
       }, function() {
         console.log('Error deleting ' + item.name);
       });

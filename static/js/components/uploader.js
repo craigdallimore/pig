@@ -12,6 +12,7 @@ const DOM   = React.DOM;
 //// FLUX /////////////////////////////////////////////////////////////////////
 
 let { uploadFiles } = require('../actions/server');
+let { filterFiles } = require('../actions/client');
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 
@@ -20,6 +21,12 @@ let Uploader = React.createClass({
   getInitialState() {
 
     return { hover : false };
+
+  },
+
+  _onChangeFilter(e) {
+
+    filterFiles(e.target.value);
 
   },
 
@@ -53,17 +60,43 @@ let Uploader = React.createClass({
     let hoverClass = this.state.hover ? ' hover' : '';
     let className  = 'drop-zone' + hoverClass;
 
-    return DOM.div({
+    return DOM.form({
+      action    : 'upload',
+      method    : 'post',
+      encType   : 'multipart/data',
+      className : 'uploader'
+    },
 
-      id          : 'file-drag',
-      className   : className,
-      onDragEnter : this._onDragEnter,
-      onDragOver  : this._onDragOver,
-      onDragLeave : this._onDragLeave,
-      onDrop      : this._onDrop,
-      style       : { 'display' : 'block' }
+      // Drag and drop Zone
+      DOM.fieldset(null,
 
-    }, DOM.p(null, 'Drop files here'));
+        DOM.div({
+
+          id          : 'file-drag',
+          className   : className,
+          onDragEnter : this._onDragEnter,
+          onDragOver  : this._onDragOver,
+          onDragLeave : this._onDragLeave,
+          onDrop      : this._onDrop,
+          style       : { 'display' : 'block' }
+
+        },
+
+          DOM.p(null, 'Drop files here')
+
+        )
+      ),
+
+      // Content filter
+      DOM.fieldset(null,
+        DOM.input({
+          id          : 'filter',
+          type        : 'text',
+          placeholder : 'filter',
+          onChange    : this._onChangeFilter
+        })
+      )
+    );
 
   },
 

@@ -16,9 +16,21 @@ let Dispatcher = require('../dispatcher/dispatcher');
 
 let Actions = {
 
+  filterFiles(term) {
+
+    Dispatcher.filterFiles(term);
+
+  },
+
   renameItem(item, newName) {
 
     Dispatcher.renameItem(item, newName);
+
+  },
+
+  confirmRemoveItem(item) {
+
+    Dispatcher.confirmRemoveItem(item);
 
   },
 
@@ -32,6 +44,18 @@ let Actions = {
 
     Dispatcher.progressUpload(item);
 
+  },
+
+  updateMediaList(items, type) {
+
+    Dispatcher.updateMediaList(items, type);
+
+  },
+
+  completeUpload(item) {
+
+    Dispatcher.completeUpload(item);
+
   }
 
 };
@@ -40,8 +64,14 @@ let Actions = {
 
 // Re-entry point for actions that extend the flux loop to the server.
 
-socket.on('renamed', Actions.renameItem);
-socket.on('deleted', Actions.removeItem);
+socket.on('file:renamed', Actions.renameItem);
+socket.on('file:removed', Actions.removeItem);
+socket.on('file:saved', Actions.completeUpload);
+
+socket.on('list:video', (items) => Actions.updateMediaList(items, 'video'));
+socket.on('list:image', (items) => Actions.updateMediaList(items, 'image'));
+socket.on('list:audio', (items) => Actions.updateMediaList(items, 'audio'));
+
 
 //// EXPORTS //////////////////////////////////////////////////////////////////
 

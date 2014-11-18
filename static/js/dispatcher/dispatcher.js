@@ -13,9 +13,21 @@ var   fileStore = require('../store/file-store');
 
 let Dispatcher = Flux.createDispatcher({
 
-  removeItem(payload) {
+  filterFiles(term) {
 
-    this.dispatch('removeItem', payload);
+    this.dispatch('filterFiles', term);
+
+  },
+
+  confirmRemoveItem(item) {
+
+    this.dispatch('confirmRemoveItem', item);
+
+  },
+
+  removeItem(item) {
+
+    this.dispatch('removeItem', item);
 
   },
 
@@ -31,6 +43,21 @@ let Dispatcher = Flux.createDispatcher({
   progressUpload(item) {
 
     this.dispatch('progressUpload', item);
+
+  },
+
+  completeUpload(item) {
+
+    this.dispatch('completeUpload', item);
+
+  },
+
+  updateMediaList(items, type) {
+
+    this.dispatch('updateMediaList', {
+      items : items,
+      type  : type
+    });
 
   },
 

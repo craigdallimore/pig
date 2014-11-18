@@ -60,13 +60,13 @@ let ServerActions = {
 
   renameItem(item, newName) {
 
-    socket.emit('rename', item, newName);
+    socket.emit('file:rename', item, newName);
 
   },
 
   removeItem(item) {
 
-    socket.emit('remove', item);
+    socket.emit('file:remove', item);
 
   }
 

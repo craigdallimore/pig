@@ -4,11 +4,12 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-//// LIBS /////////////////////////////////////////////////////////////////////
+//// IMPORTS //////////////////////////////////////////////////////////////////
 
 const { Flux }  = require('delorean');
 const React     = require('react');
 const DOM       = React.DOM;
+let   { toLowerCase, strIndexOf } = require('ramda');
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 
@@ -20,10 +21,24 @@ let MediaList = React.createClass({
 
   render : function render() {
 
-    let { types }      = this.getStore('fileStore');
-    let { type, name } = this.props;
-    let id             = this.props.key;
-    let children       = types[type];
+    let { types, filterTerm } = this.getStore('fileStore');
+    let { type, name }        = this.props;
+    let id                    = this.props.key;
+
+    // Children are filtered by name
+    let nameFilter = (x) => {
+
+      if (!filterTerm) { return true; }
+
+      let lTerm = toLowerCase(filterTerm);
+      let lName = toLowerCase(x.name);
+      let index = strIndexOf(lTerm, lName);
+
+      return index > -1;
+
+    };
+
+    let children = types[type].filter(nameFilter);
 
     return DOM.li({
       className : 'media-list',

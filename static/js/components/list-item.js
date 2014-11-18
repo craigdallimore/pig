@@ -12,7 +12,8 @@ const DOM      = React.DOM;
 
 //// FLUX /////////////////////////////////////////////////////////////////////
 
-let { removeItem, renameItem } = require('../actions/server');
+let { renameItem }        = require('../actions/server');
+let { confirmRemoveItem } = require('../actions/client');
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 
@@ -36,7 +37,6 @@ let ListItem = React.createClass({
 
   _onBlur(e) {
 
-    console.log('onBlur', e.target.value);
     this.setState({ isRenaming : false });
 
     renameItem(this.props, e.target.value);
@@ -45,7 +45,7 @@ let ListItem = React.createClass({
 
   _onDelete() {
 
-    removeItem({
+    confirmRemoveItem({
       type : this.props.type,
       name : this.props.name
     });
