@@ -19,6 +19,12 @@ let Dispatcher = Flux.createDispatcher({
 
   },
 
+  hideDialog() {
+
+    this.dispatch('hideDialog');
+
+  },
+
   confirmRemoveItem(item) {
 
     this.dispatch('confirmRemoveItem', item);

@@ -7,7 +7,7 @@
 //// IMPORTS //////////////////////////////////////////////////////////////////
 
 const { Flux }  = require('delorean');
-const React     = require('react');
+const React     = require('react/addons');
 const DOM       = React.DOM;
 let   { toLowerCase, strIndexOf } = require('ramda');
 

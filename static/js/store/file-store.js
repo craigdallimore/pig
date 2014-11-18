@@ -6,8 +6,7 @@
 
 //// LIBS /////////////////////////////////////////////////////////////////////
 
-const { Flux }            = require('delorean');
-const socket              = require('../socket');
+const { Flux }                    = require('delorean');
 let   { find, findIndex, remove } = require('ramda');
 
 //// HELPER ///////////////////////////////////////////////////////////////////
@@ -26,9 +25,14 @@ let Store = Flux.createStore({
 
   actions : {
 
-    'removeItem'     : 'removeItem',
-    'progressUpload' : 'progressUpload',
-    'renameItem'     : 'renameItem'
+    'confirmRemoveItem' : 'confirmRemoveItem',
+    'removeItem'        : 'removeItem',
+    'progressUpload'    : 'progressUpload',
+    'renameItem'        : 'renameItem',
+    'filterFiles'       : 'filterFiles',
+    'updateMediaList'   : 'updateMediaList',
+    'completeUpload'    : 'completeUpload',
+    'hideDialog'        : 'hideDialog'
 
   },
 
@@ -40,6 +44,15 @@ let Store = Flux.createStore({
 
   },
 
+  selectedItem : null,
+
+  filterTerm : '',
+
+  dialog : {
+    visible : false,
+    message : ''
+  },
+
   lists : {
 
     video: { key : 'video-list' , name : 'Videos' , type : 'video' },
@@ -48,18 +61,39 @@ let Store = Flux.createStore({
 
   },
 
-  initialize() {
+  confirmRemoveItem(item) {
 
-    socket.on('list:video', (items) => this.updateMediaList(items, 'video'));
-    socket.on('list:image', (items) => this.updateMediaList(items, 'image'));
-    socket.on('list:audio', (items) => this.updateMediaList(items, 'audio'));
-    socket.on('file:saved', this.completeUpload.bind(this));
+    let message  = 'Do you want to delete ' + item.name + '?';
+
+    this.dialog = {
+      message : message,
+      visible : true
+    };
+
+    this.selectedItem = item;
+
+    this.emit('change');
 
   },
 
-  updateMediaList(items, type) {
+  hideDialog() {
 
-    this.types[type] = items;
+    this.dialog.visible = false;
+    this.emit('change');
+
+  },
+
+  filterFiles(term) {
+
+    this.filterTerm = term;
+    this.emit('change');
+
+  },
+
+  updateMediaList(payload) {
+
+    let { type, items } = payload;
+    this.types[type]    = items;
     this.emit('change');
 
   },
@@ -101,21 +135,27 @@ let Store = Flux.createStore({
 
   },
 
-  removeItem(payload) {
+  removeItem(item) {
 
-    let { name, type } = payload;
+    let { name, type } = item;
     let collection     = this.types[type];
     let index          = findIndex(x => x.name === name, collection);
 
-    this.updateMediaList(remove(index, 1, collection), type);
+    this.updateMediaList({
+      items : remove(index, 1, collection),
+      type  : type
+    });
 
   },
 
   getState() {
 
     return {
-      lists : this.lists,
-      types : this.types
+      lists        : this.lists,
+      types        : this.types,
+      filterTerm   : this.filterTerm,
+      dialog       : this.dialog,
+      selectedItem : this.selectedItem
     };
 
   }

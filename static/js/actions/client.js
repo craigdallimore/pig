@@ -22,6 +22,12 @@ let Actions = {
 
   },
 
+  hideDialog() {
+
+    Dispatcher.hideDialog();
+
+  },
+
   renameItem(item, newName) {
 
     Dispatcher.renameItem(item, newName);
