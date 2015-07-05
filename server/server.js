@@ -13,24 +13,23 @@
 
 // Set up
 // ----------------------------------------------------------------------------
-var express    = require('express'),
-  app          = express(),
-  morgan       = require('morgan'),
-  compression  = require('compression'),
-  errorHandler = require('errorhandler'),
-  server       = require('http').Server(app),
-  io           = require('socket.io').listen(server),
-  env          = process.env.NODE_ENV || 'development',
-  port         = process.env.PORT || 3000;
+let express      = require('express');
+let app          = express();
+let morgan       = require('morgan');
+let errorHandler = require('errorhandler');
+let server       = require('http').Server(app);
+let io           = require('socket.io').listen(server);
+let env          = process.env.NODE_ENV || 'development';
+let port         = process.env.PORT || 3000;
 
 // Configuration
 // ----------------------------------------------------------------------------
-app.set('views', __dirname + '/server/views/');
+app.set('views', __dirname + '/views/');
 
-var oneYear = 31557600000;
+let oneYear = 31557600000;
 
-app.use(express.static(__dirname + '/',       { maxAge: oneYear }));
-app.use(express.static(__dirname + '/static', { maxAge: oneYear }));
+app.use(express.static(__dirname + '/../',       { maxAge: oneYear }));
+app.use(express.static(__dirname + '/../static', { maxAge: oneYear }));
 
 if (env === 'development') {
 
@@ -46,8 +45,7 @@ if (env === 'development') {
 
 // Routes
 // ----------------------------------------------------------------------------
-require('./server/route')(app, io);
-
+require('./route')(app, io);
 
 // Launch
 // ----------------------------------------------------------------------------

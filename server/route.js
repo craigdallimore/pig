@@ -1,32 +1,34 @@
-var fs = require('fs'),
-    ss = require('socket.io-stream'),
-    _  = require('lodash'),
-    path = require('path'),
-    Promise = require('bluebird'),
+///////////////////////////////////////////////////////////////////////////////
+//
+// Routes, etc
+//
+///////////////////////////////////////////////////////////////////////////////
 
-    library = process.env.NODE_ENV === 'development' ?
-    '/home/decoy/dev-local/pig/library/' :
-    '/home/pi/ext/';
+let fs               = require('fs');
+let ss               = require('socket.io-stream');
+let path             = require('path');
+let { promisifyAll } = require('bluebird');
+let config           = require('../config.json');
 
 // Use bluebird to upgrade fs to a promise library
-Promise.promisifyAll(fs);
+promisifyAll(fs);
+
+console.log(config.library);
 
 // Get directory list
 // ----------------------------------------------------------------------------
 
 function emitList(type, socket) {
 
-  var dir = library + type + '/';
+  let dir = `${config.library}/${type}/`;
 
-  fs.readdirAsync(dir).then(function(files) {
+  fs.readdirAsync(dir).then(files => {
 
-    var fileList = files.map(function(name) {
+    let fileList = files.map(name => {
 
-      return {
-        name: name,
-        type: type,
-        path: '/files/' + type + '/' + name
-      };
+      let path = `/files/${type}/${name}`;
+
+      return { name, type, path };
 
     });
 
@@ -36,9 +38,9 @@ function emitList(type, socket) {
 
 }
 
-module.exports = function(app, io) {
+module.exports = (app, io) => {
 
-  io.sockets.on('connection', function(socket) {
+  io.sockets.on('connection', socket => {
 
     emitList('video', socket);
     emitList('image', socket);
@@ -47,19 +49,20 @@ module.exports = function(app, io) {
     // File uploads are streamed. Once the stream completes, an event is
     // emitted to inform the client that the new file has been saved.
     // ------------------------------------------------------------------------
-    ss(socket).on('file:upload', function(stream, data) {
+    ss(socket).on('file:upload', (stream, data) => {
 
-      var name = path.basename(data.name);
-      var type = data.type;
+      let name = path.basename(data.name);
+      let type = data.type;
+      let uploadPath = `${config.library}/${type}/${name}`;
 
-      stream.pipe(fs.createWriteStream(library + type + '/' + name));
+      stream.pipe(fs.createWriteStream(uploadPath));
 
-      stream.on('end', function() {
+      stream.on('end', () => {
 
         socket.emit('file:saved', {
-          name: name,
-          type: type,
-          path: '/files/' + type + '/' + name
+          name,
+          type,
+          path: `/files/${type}/${name}`
         });
 
       });
@@ -68,25 +71,27 @@ module.exports = function(app, io) {
 
     // File renaming
     // ------------------------------------------------------------------------
-    socket.on('file:rename', function(item, newName) {
+    socket.on('file:rename', (item, newName) => {
 
-      var oldPath = library + item.type + '/' + item.name,
-        newPath   = library + item.type + '/' + newName;
+      let oldPath = `${config.library}/${item.type}/${item.name}`;
+      let newPath = `${config.library}/${item.type}/${newName}`;
 
-      fs.renameAsync(oldPath, newPath).then(function() {
-        console.log('Renamed ' + item.name + ' to ' + newName);
-        socket.emit('file:renamed', item, newName);
-      }, function() {
-        console.log('Error renaming ' + item.name + ' to ' + newName);
-      });
+      fs.renameAsync(oldPath, newPath)
+        .then(() => {
+          console.log('Renamed ' + item.name + ' to ' + newName);
+          socket.emit('file:renamed', item, newName);
+        }).
+        catch(() => {
+          console.log('Error renaming ' + item.name + ' to ' + newName);
+        });
 
     });
 
     // File deleting
     // ------------------------------------------------------------------------
-    socket.on('file:remove', function(item) {
+    socket.on('file:remove', item => {
 
-      var path = library + item.type + '/' + item.name;
+      let path = `${config.library}/${item.type}/${item.name}`;
 
       fs.unlinkAsync(path).then(function() {
         console.log('deleted', item);
@@ -111,7 +116,7 @@ module.exports = function(app, io) {
 
   function getFile(req, res) {
 
-    var file = library + req.params.type + '/' + req.params.name;
+    let file = `${config.library}/${req.params.type}/${req.params.name}`;
     fs.createReadStream(file).pipe(res);
 
   }

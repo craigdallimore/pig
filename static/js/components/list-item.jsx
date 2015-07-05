@@ -8,7 +8,6 @@
 
 const { Flux } = require('delorean');
 const React    = require('react/addons');
-const DOM      = React.DOM;
 
 //// FLUX /////////////////////////////////////////////////////////////////////
 
@@ -55,55 +54,27 @@ let ListItem = React.createClass({
   render() {
 
     let { path, name, percentage } = this.props;
+    let style = { width: percentage + "%" };
 
+    // Use a <p> or <input> if we are in edit mode or read mode
     let nameEl = this.state.isRenaming ?
+      <input type="text" ref="nameInput" defaultValue={name} onBlur={this._onBlur}/> :
+      <p className="name" onClick={ this._onClick}>{name}</p>
 
-      // <input>
-      DOM.input({
-        ref          : 'nameInput',
-        type         : 'text',
-        defaultValue : name,
-        onBlur       : this._onBlur
-      })
+    // Normal listing
+    let normalLi =
+    <li>
+      <button className="btn-remove" onClick={ this._onDelete }>x</button>
+      <a className="link" href={path}>▾ Download</a>
+      { nameEl }
+    </li>
 
-      : // or
-
-      // <p>
-      DOM.p({
-        className : 'name',
-        onClick   : this._onClick
-      }, name);
-
-    // <li> Normal listing
-    let normalLi = DOM.li(null,
-
-      DOM.button({
-
-        className : 'btn-remove',
-        onClick   : this._onDelete
-
-      }, 'x'),
-
-      DOM.a({
-        className : 'link',
-        href      : path
-      }, '▾ Download'),
-
-      nameEl
-
-    );
-
-    // <li> Uploading listing
-    let uploadLi = DOM.li(null,
-
-      DOM.p(null, 'Uploading ' + name),
-
-      DOM.div({
-        className : 'progress',
-        style     : { width : percentage + '%' }
-      })
-
-    );
+    // Listing during an upload
+    let uploadLi =
+    <li>
+      <p>Uploading</p>
+      <div className="progress" style={ style }></div>
+    </li>
 
     return percentage ? uploadLi : normalLi;
 
