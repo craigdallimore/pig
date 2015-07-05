@@ -13,7 +13,7 @@ let   { toLowerCase, strIndexOf } = require('ramda');
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 
-let ListItem = require('./list-item');
+let ListItem = require('./list-item.jsx');
 
 let MediaList = React.createClass({
 

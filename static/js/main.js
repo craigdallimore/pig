@@ -10,8 +10,8 @@
 //// IMPORTS  /////////////////////////////////////////////////////////////////
 
 const React    = require('react/addons');
-let MediaLists = require('./components/media-lists');
-let Uploader   = require('./components/uploader');
+let MediaLists = require('./components/media-lists.jsx');
+let Uploader   = require('./components/uploader.jsx');
 let Confirm    = require('./components/confirm.jsx');
 let dispatcher = require('./dispatcher/dispatcher');
 

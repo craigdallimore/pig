@@ -14,7 +14,7 @@ let   DOM      = React.DOM;
 
 //// COMPONENT ////////////////////////////////////////////////////////////////
 
-let MediaList = require('./media-list');
+let MediaList = require('./media-list.jsx');
 
 let mediaLists = React.createClass({
 
